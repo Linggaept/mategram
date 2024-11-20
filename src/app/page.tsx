@@ -1,7 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function login() {
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter(); // Router dari next/navigation
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await axios.post("/api/login", { email, password });
+
+      // Simpan token di localStorage
+      localStorage.setItem("token", response.data.token);
+      setMessage(response.data.message);
+
+      // Redirect ke halaman beranda dengan ID
+      const userId = response.data.id; // ID pengguna dari respons API
+      router.push(`/beranda/${userId}`); // Gunakan router.push untuk redirect
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Terjadi kesalahan");
+    }
+  };
+
   return (
     <div className="xl:p-20 p-4">
       <main className="flex flex-col mx-auto">
@@ -24,15 +56,17 @@ export default function login() {
             </Link>
           </div>
 
-          <form action="">
+          <form onSubmit={handleLogin}>
             <div className="flex flex-col">
               <label htmlFor="email" className="font-medium text-md">
                 Email
               </label>
               <input
-                type="text"
+                type="email"
                 id="email"
-                placeholder="Masukan email"
+                placeholder="Masukkan email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
               <label htmlFor="password" className="font-medium text-md">
@@ -41,14 +75,21 @@ export default function login() {
               <input
                 type="password"
                 id="password"
-                placeholder="Masukan Password"
+                placeholder="Masukkan Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
 
-            <button className="bg-blue-600 text-white text-md font-semibold rounded-3xl px-6 py-2 mt-6 w-full hover:bg-blue-700 duration-150">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white text-md font-semibold rounded-3xl px-6 py-2 mt-6 w-full hover:bg-blue-700 duration-150"
+            >
               Masuk
             </button>
+            {message && <p className="text-green-600 mt-4">{message}</p>}
+            {error && <p className="text-red-600 mt-4">{error}</p>}
           </form>
         </div>
       </main>

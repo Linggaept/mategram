@@ -31,6 +31,7 @@ export default function Daftar() {
 
       setLoading(false);
       setMessage(response.data.message);
+      window.location.href = "/";
     } catch (err: any) {
       setLoading(false);
       setError(err.response?.data?.message || "Terjadi kesalahan!");
