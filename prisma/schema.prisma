@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String  @id @default(uuid())
+  nama         String
+  username     String  @unique
+  email        String  @unique
+  password     String
+  fotoProfil   String?
+  pembayaranKreator PembayaranKreator[]
+}
+
+model Kreator {
+  id               String   @id @default(uuid())
+  nama             String
+  username         String   @unique
+  email            String   @unique
+  password         String
+  fotoProfil       String?
+  fotoBanner       String?
+  deskripsi        String?
+  statusAkun       Boolean  @default(false)
+  rekening         String?
+  biayaSubscription Float
+  konten           Konten[]
+  transaksi        Transaksi[]
+  subscription     Subscription[]
+  pembayaranKreator PembayaranKreator[]
+}
+
+model Subscriber {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  transaksi    Transaksi[]
+  subscription Subscription[]
+}
+
+model Konten {
+  id        String  @id @default(uuid())
+  konten    String
+  jenisKonten String
+  deskripsi String?
+  kreatorId String
+  kreator   Kreator @relation(fields: [kreatorId], references: [id])
+}
+
+model Transaksi {
+  id              String     @id @default(uuid())
+  tanggal         DateTime   @default(now())
+  totalTransaksi  Float
+  statusTransaksi String
+  kreatorId       String
+  subscriberId    String
+  kreator         Kreator    @relation(fields: [kreatorId], references: [id])
+  subscriber      Subscriber @relation(fields: [subscriberId], references: [id])
+  subscription    Subscription[]
+}
+
+model Subscription {
+  id                String     @id @default(uuid())
+  kodeSubscription  String
+  statusSubscription String
+  kreatorId         String
+  subscriberId      String
+  transaksiId       String
+  kreator           Kreator    @relation(fields: [kreatorId], references: [id])
+  subscriber        Subscriber @relation(fields: [subscriberId], references: [id])
+  transaksi         Transaksi  @relation(fields: [transaksiId], references: [id])
+}
+
+model PembayaranKreator {
+  id                 String   @id @default(uuid())
+  tanggal            DateTime @default(now())
+  totalPembayaran    Float
+  statusPembayaran   String
+  kreatorId          String
+  adminId            String
+  kreator            Kreator  @relation(fields: [kreatorId], references: [id])
+  admin              Admin    @relation(fields: [adminId], references: [id])
+}
