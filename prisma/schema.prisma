@@ -8,80 +8,79 @@ datasource db {
 }
 
 model Admin {
-  id           String  @id @default(uuid())
-  nama         String
-  username     String  @unique
-  email        String  @unique
-  password     String
-  fotoProfil   String?
+  id                String              @id @default(uuid())
+  nama              String
+  username          String              @unique
+  email             String              @unique
+  password          String
+  fotoProfil        String?
   pembayaranKreator PembayaranKreator[]
 }
 
 model Kreator {
-  id               String   @id @default(uuid())
-  nama             String
-  username         String   @unique
-  email            String   @unique
-  password         String
-  fotoProfil       String?
-  fotoBanner       String?
-  deskripsi        String?
-  statusAkun       Boolean  @default(false)
-  rekening         String?
+  id                String              @id @default(uuid())
+  nama              String
+  username          String              @unique
+  email             String              @unique
+  password          String
+  fotoProfil        String?
+  fotoBanner        String?
+  deskripsi         String?
+  statusAkun        Boolean             @default(false)
+  rekening          String?
   biayaSubscription Float
-  konten           Konten[]
-  transaksi        Transaksi[]
-  subscription     Subscription[]
+  konten            Konten[]
+  transaksi         Transaksi[]
+  subscription      Subscription[]
   pembayaranKreator PembayaranKreator[]
 }
 
 model Subscriber {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String         @id @default(uuid())
+  email        String         @unique
   transaksi    Transaksi[]
   subscription Subscription[]
 }
 
 model Konten {
-  id        String  @id @default(uuid())
-  konten    String
-  jenisKonten String
-  deskripsi String?
-  kreatorId String
-  kreator   Kreator @relation(fields: [kreatorId], references: [id])
+  id        String  @id @default(uuid()) // ID konten
+  konten    String // Nama file atau path file (gambar/video)
+  deskripsi String? // Deskripsi konten, opsional
+  kreatorId String // ID kreator yang mengunggah
+  kreator   Kreator @relation(fields: [kreatorId], references: [id]) // Relasi ke kreator
 }
 
 model Transaksi {
-  id              String     @id @default(uuid())
-  tanggal         DateTime   @default(now())
+  id              String         @id @default(uuid())
+  tanggal         DateTime       @default(now())
   totalTransaksi  Float
   statusTransaksi String
   kreatorId       String
   subscriberId    String
-  kreator         Kreator    @relation(fields: [kreatorId], references: [id])
-  subscriber      Subscriber @relation(fields: [subscriberId], references: [id])
+  kreator         Kreator        @relation(fields: [kreatorId], references: [id])
+  subscriber      Subscriber     @relation(fields: [subscriberId], references: [id])
   subscription    Subscription[]
 }
 
 model Subscription {
-  id                String     @id @default(uuid())
-  kodeSubscription  String
+  id                 String     @id @default(uuid())
+  kodeSubscription   String
   statusSubscription String
-  kreatorId         String
-  subscriberId      String
-  transaksiId       String
-  kreator           Kreator    @relation(fields: [kreatorId], references: [id])
-  subscriber        Subscriber @relation(fields: [subscriberId], references: [id])
-  transaksi         Transaksi  @relation(fields: [transaksiId], references: [id])
+  kreatorId          String
+  subscriberId       String
+  transaksiId        String
+  kreator            Kreator    @relation(fields: [kreatorId], references: [id])
+  subscriber         Subscriber @relation(fields: [subscriberId], references: [id])
+  transaksi          Transaksi  @relation(fields: [transaksiId], references: [id])
 }
 
 model PembayaranKreator {
-  id                 String   @id @default(uuid())
-  tanggal            DateTime @default(now())
-  totalPembayaran    Float
-  statusPembayaran   String
-  kreatorId          String
-  adminId            String
-  kreator            Kreator  @relation(fields: [kreatorId], references: [id])
-  admin              Admin    @relation(fields: [adminId], references: [id])
+  id               String   @id @default(uuid())
+  tanggal          DateTime @default(now())
+  totalPembayaran  Float
+  statusPembayaran String
+  kreatorId        String
+  adminId          String
+  kreator          Kreator  @relation(fields: [kreatorId], references: [id])
+  admin            Admin    @relation(fields: [adminId], references: [id])
 }
