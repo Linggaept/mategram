@@ -58,10 +58,10 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <OverlayOne />
-      <ModalContent className="p-10 min-h-screen justify-center absolute z-50 overflow-y-auto w-full">
-        <ModalBody className=" mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
+      <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
+        <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
           {/* Menampilkan gambar konten */}
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             <div className="">
               <Image
                 src={`/konten/${content.konten}`} // Path gambar di dalam public/konten
@@ -71,7 +71,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
                 className="aspect-square rounded-l-3xl object-cover"
               />
             </div>
-            <div className="w-full flex flex-col justify-between">
+            <div className="w-full flex flex-col justify-between h-full">
               <div className="w-full border-b-2 border-gray-400">
                 <div className="p-5">
                   <div className="flex items-center gap-2 w-full">
@@ -93,11 +93,12 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
                 </div>
               </div>
 
-              <div className="w-full p-8 max-h-80 bg-red-200">
+              {/* Tambahkan overflow untuk deskripsi */}
+              <div className="w-full p-8 max-h-40 md:max-h-80 overflow-y-auto">
                 <Text className="text-black">{content.deskripsi}</Text>
               </div>
 
-              <div className="flex gap-4 p-8 mt-auto">
+              <div className="flex gap-2 md:gap-4 p-4 md:p-8 mt-auto">
                 <button className="px-6 py-2 text-lg rounded-full font-semibold text-red-700 border-2 border-red-700 bg-white">
                   Hapus
                 </button>
@@ -110,7 +111,6 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
 
           <div className="absolute top-8 right-8">
             <ModalCloseButton />
-            
           </div>
         </ModalBody>
       </ModalContent>

@@ -5,11 +5,11 @@ import prisma from "../../../../../lib/prisma";
 // API untuk mengambil data kreator berdasarkan ID
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
 
   try {
+    const { id } = await context.params;
     // Ambil data kreator berdasarkan ID dan konten yang dimilikinya
     const kreator = await prisma.kreator.findUnique({
       where: {
@@ -37,9 +37,22 @@ export async function GET(
       },
     });
 
-    // Jika kreator ditemukan, return data kreator
+    // Hitung jumlah kodeSubscription pada model Subscription
+    const totalKodeSubscription = await prisma.subscription.aggregate({
+      where: {
+        kreatorId: id, // hanya hitung subscription untuk kreator ini
+      },
+      _count: {
+        kodeSubscription: true, // hitung jumlah kodeSubscription
+      },
+    });
+
+    // Jika kreator ditemukan, return data kreator dan jumlah kodeSubscription
     if (kreator) {
-      return NextResponse.json(kreator);
+      return NextResponse.json({
+        ...kreator,
+        totalKodeSubscription: totalKodeSubscription._count.kodeSubscription || 0, // tambahkan total kodeSubscription
+      });
     } else {
       return NextResponse.json(
         { message: "Kreator tidak ditemukan" },
@@ -47,6 +60,7 @@ export async function GET(
       );
     }
   } catch (error) {
+    console.error("Error fetching data:", error);
     return NextResponse.json(
       { message: "Terjadi kesalahan pada server" },
       { status: 500 }

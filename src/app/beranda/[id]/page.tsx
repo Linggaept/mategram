@@ -111,7 +111,7 @@ export default function Beranda() {
                 <p className="font-normal text-gray-400 text-lg">Postingan</p>
               </div>
               <div className="flex flex-col">
-                <h1 className="font-semibold text-3xl">100</h1>
+                <h1 className="font-semibold text-3xl">{kreator.totalKodeSubscription}</h1>
                 <p className="font-normal text-gray-400 text-lg">Subscriber</p>
               </div>
             </div>
