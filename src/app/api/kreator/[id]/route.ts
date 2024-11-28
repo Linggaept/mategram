@@ -23,11 +23,15 @@ export async function GET(
         fotoBanner: true, // ambil foto banner kreator
         konten: {
           // ambil konten yang dimiliki kreator
-
           select: {
             id: true,
             konten: true, // ambil nama file/video konten
             deskripsi: true, // deskripsi konten
+          },
+        },
+        _count: {
+          select: {
+            konten: true, // ambil jumlah konten yang dimiliki kreator
           },
         },
       },

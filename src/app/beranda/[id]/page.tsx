@@ -5,10 +5,23 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import ViewImage from "../modalImage";
 
 export default function Beranda() {
   const [kreator, setKreator] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedContentId, setSelectedContentId] = useState<string>("");
+
+  const openModal = (contentId: string) => {
+    setSelectedContentId(contentId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const token = localStorage.getItem("token");
 
   const { id } = useParams(); // Ambil ID dari URL
@@ -33,6 +46,7 @@ export default function Beranda() {
         })
         .then((response) => {
           setKreator(response.data); // Simpan data kreator
+          console.log(response.data);
           setLoading(false);
         })
         .catch((error) => {
@@ -65,8 +79,8 @@ export default function Beranda() {
           <Image
             src={`/fotoBanner/${kreator.fotoBanner}`} // Menggunakan path relatif ke folder public
             alt="Banner"
-            width={100}
-            height={100}
+            width={1000}
+            height={1000}
             className="w-full h-full object-cover"
           />
         </div>
@@ -82,7 +96,7 @@ export default function Beranda() {
             />
           </div>
 
-          <div className="flex flex-col text-center justify-center mx-auto w-1/2 mt-32">
+          <div className="flex flex-col text-center justify-center mx-auto w-3/4 md:w-1/2 mt-32">
             <h1 className="font-semibold text-2xl">{kreator.nama}</h1>
             <h2 className="font-normal text-gray-400 text-lg">
               @{kreator.username}
@@ -91,7 +105,9 @@ export default function Beranda() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-1/2 mx-auto">
               <div className="flex flex-col">
-                <h1 className="font-semibold text-3xl">100</h1>
+                <h1 className="font-semibold text-3xl">
+                  {kreator._count?.konten}
+                </h1>
                 <p className="font-normal text-gray-400 text-lg">Postingan</p>
               </div>
               <div className="flex flex-col">
@@ -118,12 +134,31 @@ export default function Beranda() {
               </p>
             </div>
 
-            <div>
+            <div className="pb-5">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 w-3/4 mx-auto">
-                <div className="aspect-square bg-gray-400 rounded-xl"></div>
-                <div className="aspect-square bg-gray-400 rounded-xl"></div>
-                <div className="aspect-square bg-gray-400 rounded-xl"></div>
+                {/* Gambar konten */}
+                {kreator.konten.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="aspect-square bg-gray-400 rounded-xl cursor-pointer"
+                    onClick={() => openModal(item.id)} // Buka modal saat gambar diklik
+                  >
+                    <Image
+                      src={`/konten/${item.konten}`}
+                      alt={item.konten}
+                      width={1000}
+                      height={1000}
+                      className="object-cover w-full h-full rounded-xl"
+                    />
+                  </div>
+                ))}
               </div>
+
+              <ViewImage
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                contentId={selectedContentId} // Kirimkan contentId yang dipilih
+              />
             </div>
           </div>
         </div>
