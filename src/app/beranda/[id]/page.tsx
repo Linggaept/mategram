@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -6,18 +7,34 @@ import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import ViewImage from "../modalImage";
+import UploadModal from "../uploadModal";
 
 export default function Beranda() {
   const [kreator, setKreator] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedContentId, setSelectedContentId] = useState<string>("");
+  const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
+  const [kontenList, setKontenList] = useState<any>([]);
+
+  const refreshKontenList = async () => {
+    const response = await fetch("/api/konten"); // Ambil data konten terbaru
+    const data = await response.json();
+    setKontenList(data); // Update konten
+  };
 
   const openModal = (contentId: string) => {
     setSelectedContentId(contentId);
     setIsModalOpen(true);
   };
 
+  const openUploadModal = () => {
+    setUploadModalOpen(true);
+  };
+
+  const closeUploadModal = () => {
+    setUploadModalOpen(false);
+  };
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -111,7 +128,9 @@ export default function Beranda() {
                 <p className="font-normal text-gray-400 text-lg">Postingan</p>
               </div>
               <div className="flex flex-col">
-                <h1 className="font-semibold text-3xl">{kreator.totalKodeSubscription}</h1>
+                <h1 className="font-semibold text-3xl">
+                  {kreator.totalKodeSubscription}
+                </h1>
                 <p className="font-normal text-gray-400 text-lg">Subscriber</p>
               </div>
             </div>
@@ -162,6 +181,21 @@ export default function Beranda() {
             </div>
           </div>
         </div>
+
+        <div className="fixed bottom-5 transform -translate-x-1/2 left-1/2">
+          <button
+            onClick={openUploadModal}
+            className="bg-blue-600 text-white border border-white rounded-full px-8 py-2 text-lg font-semibold justify-center flex"
+          >
+            + Posting
+          </button>
+        </div>
+
+        <UploadModal
+          isOpen={uploadModalOpen}
+          onClose={closeUploadModal}
+          kreatorId={kreator.id}
+        />
       </div>
     </main>
   );

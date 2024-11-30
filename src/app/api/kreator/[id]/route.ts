@@ -16,6 +16,7 @@ export async function GET(
         id: id, // mencari kreator berdasarkan ID
       },
       select: {
+        id: true,
         nama: true, // ambil nama kreator
         username: true, // ambil username kreator
         deskripsi: true, // ambil deskripsi kreator
