@@ -30,6 +30,7 @@ interface ModalImageProps {
 export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
   const [content, setContent] = useState<any>(null); // Untuk menyimpan data konten
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false); // Untuk status penghapusan
 
   useEffect(() => {
     if (contentId) {
@@ -47,6 +48,23 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
     }
   }, [contentId]);
 
+  const handleDelete = async () => {
+    if (!contentId) return;
+
+    setIsDeleting(true); // Tampilkan indikator proses penghapusan
+    try {
+      await axios.delete(`/api/konten/${contentId}`);
+      alert("Konten berhasil dihapus");
+      onClose(); // Tutup modal setelah berhasil menghapus
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting content:", error);
+      alert("Gagal menghapus konten");
+    } finally {
+      setIsDeleting(false); // Sembunyikan indikator proses penghapusan
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -60,7 +78,6 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
       <OverlayOne />
       <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
         <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
-          {/* Menampilkan gambar konten */}
           <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             <div className="">
               <Image
@@ -92,15 +109,20 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
                   </div>
                 </div>
               </div>
-
-              {/* Tambahkan overflow untuk deskripsi */}
               <div className="w-full p-8 max-h-40 md:max-h-80 overflow-y-auto">
                 <Text className="text-black">{content.deskripsi}</Text>
               </div>
-
               <div className="flex gap-2 md:gap-4 p-4 md:p-8 mt-auto">
-                <button className="px-6 py-2 text-lg rounded-full font-semibold text-red-700 border-2 border-red-700 bg-white">
-                  Hapus
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className={`px-6 py-2 text-lg rounded-full font-semibold border-2 ${
+                    isDeleting
+                      ? "text-gray-500 border-gray-500 bg-gray-200"
+                      : "text-red-700 border-red-700 bg-white"
+                  }`}
+                >
+                  {isDeleting ? "Menghapus..." : "Hapus"}
                 </button>
                 <button className="px-10 py-2 text-lg rounded-full font-semibold text-white bg-blue-600">
                   Edit
@@ -108,7 +130,6 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
               </div>
             </div>
           </div>
-
           <div className="absolute top-8 right-8">
             <ModalCloseButton />
           </div>
