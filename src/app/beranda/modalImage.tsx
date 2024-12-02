@@ -109,7 +109,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
                         alt={`/fotoProfil/${content.kreator?.fotoProfil}`}
                         width={50}
                         height={50}
-                        className="w-12 h-12 rounded-full"
+                        className="w-12 h-12 rounded-full object-cover"
                       />
                     </div>
                     <div className="flex">
