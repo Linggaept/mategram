@@ -79,14 +79,25 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
       <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
         <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
           <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-            <div className="">
-              <Image
-                src={`/konten/${content.konten}`} // Path gambar di dalam public/konten
-                alt={content.konten}
-                width={1000} // Tentukan ukuran gambar sesuai kebutuhan
-                height={1000}
-                className="aspect-square rounded-l-3xl object-cover"
-              />
+          <div className="">
+              {/* Render Image or Video */}
+              {content.type === "image" ? (
+                <Image
+                  src={`/konten/${content.konten}`}
+                  alt={content.konten}
+                  width={1000}
+                  height={1000}
+                  className="aspect-square rounded-l-3xl object-cover"
+                />
+              ) : (
+                <video
+                  controls
+                  className="w-full h-full aspect-square rounded-l-3xl object-cover"
+                >
+                  <source src={`/konten/${content.konten}`} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
             <div className="w-full flex flex-col justify-between h-full">
               <div className="w-full border-b-2 border-gray-400">

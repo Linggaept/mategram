@@ -152,13 +152,22 @@ export default function Beranda() {
                   className="aspect-square bg-gray-400 rounded-xl cursor-pointer"
                   onClick={() => openModal(item.id)} // Buka modal saat gambar diklik
                 >
-                  <Image
+                  {item.type === "video" ? (
+                    <video
                     src={`/konten/${item.konten}`}
-                    alt={item.konten}
                     width={1000}
                     height={1000}
                     className="object-cover w-full h-full rounded-xl"
                   />
+                  ) : (
+                    <Image
+                      src={`/konten/${item.konten}`}
+                      alt={item.konten}
+                      width={1000}
+                      height={1000}
+                      className="object-cover w-full h-full rounded-xl"
+                    />
+                  )}
                 </div>
               ))}
             </div>

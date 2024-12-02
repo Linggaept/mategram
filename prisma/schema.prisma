@@ -44,6 +44,7 @@ model Subscriber {
 
 model Konten {
   id        String  @id @default(uuid()) // ID konten
+  type      String  @default("image")// Tipe konten (gambar/video)
   konten    String // Nama file atau path file (gambar/video)
   deskripsi String? // Deskripsi konten, opsional
   kreatorId String // ID kreator yang mengunggah

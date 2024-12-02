@@ -28,6 +28,7 @@ export async function GET(
             id: true,
             konten: true, // ambil nama file/video konten
             deskripsi: true, // deskripsi konten
+            type: true, // tipe konten (file/video)
           },
         },
         _count: {
