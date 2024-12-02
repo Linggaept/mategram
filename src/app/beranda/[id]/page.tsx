@@ -154,14 +154,14 @@ export default function Beranda() {
                 >
                   {item.type === "video" ? (
                     <video
-                    src={`/konten/${item.konten}`}
+                    src={`/api/viewKonten/${item.konten}`}
                     width={1000}
                     height={1000}
                     className="object-cover w-full h-full rounded-xl"
                   />
                   ) : (
                     <Image
-                      src={`/konten/${item.konten}`}
+                      src={`/api/viewKonten/${item.konten}`}
                       alt={item.konten}
                       width={1000}
                       height={1000}

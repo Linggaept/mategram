@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import prisma from "../../../../lib/prisma";
 
 export const POST = async (req: NextRequest) => {
@@ -26,10 +26,14 @@ export const POST = async (req: NextRequest) => {
     const filename = `${Date.now()}_${file.name.replaceAll(" ", "_")}`;
 
     // Tentukan path direktori penyimpanan
-    const uploadDir = path.join(process.cwd(), "public/konten");
+    const uploadDir = path.join(process.cwd(), "konten");
+    
+    // Pastikan direktori file_konten sudah ada
+    await mkdir(uploadDir, { recursive: true });
+
     const filePath = path.join(uploadDir, filename);
 
-    // Simpan file ke direktori public/konten
+    // Simpan file ke direktori file_konten
     await writeFile(filePath, buffer);
 
     // Tentukan tipe konten berdasarkan ekstensi file
@@ -41,18 +45,12 @@ export const POST = async (req: NextRequest) => {
       fileType = "video";
     }
 
-    // Buat URL untuk file yang diupload
-    const fileUrl = `${filename}`;
-
-    // Ambil deskripsi dari formData
-    const description = formData.get("description")?.toString() || "";
-
     // Simpan data ke database
     const konten = await prisma.konten.create({
       data: {
-        konten: fileUrl, // Path file
-        deskripsi: description,
-        kreatorId: kreatorId, // Pastikan ID kreator valid
+        konten: filename, // Nama file
+        deskripsi: formData.get("description")?.toString() || "",
+        kreatorId, // Pastikan ID kreator valid
         type: fileType, // Set tipe konten
       },
     });

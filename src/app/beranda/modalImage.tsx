@@ -83,7 +83,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
               {/* Render Image or Video */}
               {content.type === "image" ? (
                 <Image
-                  src={`/konten/${content.konten}`}
+                  src={`/api/viewKonten/${content.konten}`}
                   alt={content.konten}
                   width={1000}
                   height={1000}
@@ -94,7 +94,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
                   controls
                   className="w-full h-full aspect-square rounded-l-3xl object-cover"
                 >
-                  <source src={`/konten/${content.konten}`} type="video/mp4" />
+                  <source src={`/api/viewKonten/${content.konten}`} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               )}
