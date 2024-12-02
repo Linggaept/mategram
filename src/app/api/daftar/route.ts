@@ -30,6 +30,8 @@ export async function POST(req: Request) {
         nama,
         username,
         email,
+        fotoBanner: "default.jpg",
+        fotoProfil: "default.png",
         password: hashedPassword, // Simpan password yang sudah terenkripsi
         statusAkun: false, // Status akun defaultnya belum aktif
         biayaSubscription: 0, // Berikan nilai default untuk biayaSubscription

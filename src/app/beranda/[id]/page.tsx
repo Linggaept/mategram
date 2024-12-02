@@ -15,13 +15,7 @@ export default function Beranda() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedContentId, setSelectedContentId] = useState<string>("");
   const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
-  const [kontenList, setKontenList] = useState<any>([]);
 
-  const refreshKontenList = async () => {
-    const response = await fetch("/api/konten"); // Ambil data konten terbaru
-    const data = await response.json();
-    setKontenList(data); // Update konten
-  };
 
   const openModal = (contentId: string) => {
     setSelectedContentId(contentId);
@@ -47,6 +41,7 @@ export default function Beranda() {
 
   // Redirect ke halaman login jika token tidak ada
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (!token) {
       router.push("/"); // Mengarahkan ke halaman login
     }
