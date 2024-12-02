@@ -32,6 +32,15 @@ export const POST = async (req: NextRequest) => {
     // Simpan file ke direktori public/konten
     await writeFile(filePath, buffer);
 
+    // Tentukan tipe konten berdasarkan ekstensi file
+    const fileExtension = path.extname(file.name).toLowerCase();
+    let fileType = "image"; // Default ke gambar
+
+    // Cek ekstensi file, jika video maka set type ke 'video'
+    if ([".mp4", ".avi", ".mov", ".mkv"].includes(fileExtension)) {
+      fileType = "video";
+    }
+
     // Buat URL untuk file yang diupload
     const fileUrl = `${filename}`;
 
@@ -44,6 +53,7 @@ export const POST = async (req: NextRequest) => {
         konten: fileUrl, // Path file
         deskripsi: description,
         kreatorId: kreatorId, // Pastikan ID kreator valid
+        type: fileType, // Set tipe konten
       },
     });
 
