@@ -21,13 +21,17 @@ const OverlayOne = () => (
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  kreatorId: string;  
+  kreatorId: string;
 }
 
-export const UploadModal = ({ isOpen, onClose, kreatorId }: UploadModalProps) => {
+export const UploadModal = ({
+  isOpen,
+  onClose,
+  kreatorId,
+}: UploadModalProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [description, setDescription] = useState<string>(""); 
+  const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,20 +50,20 @@ export const UploadModal = ({ isOpen, onClose, kreatorId }: UploadModalProps) =>
       alert("Harap isi file dan deskripsi!");
       return;
     }
-  
+
     // Create FormData with kreatorId
     const formData = new FormData();
     formData.append("file", file);
     formData.append("description", description);
-    formData.append("kreatorId", kreatorId);  // Add kreatorId to formData
-  
+    formData.append("kreatorId", kreatorId); // Add kreatorId to formData
+
     try {
       setIsLoading(true);
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
-  
+
       const responseData = await response.json();
       if (response.ok) {
         alert("Konten berhasil diunggah!");
@@ -79,12 +83,19 @@ export const UploadModal = ({ isOpen, onClose, kreatorId }: UploadModalProps) =>
       setIsLoading(false);
     }
   };
-  
 
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isCentered
+      isOpen={isOpen}
+      onClose={onClose}
+      portalProps={{ appendToParentPortal: false }}
+    >
       <OverlayOne />
-      <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
+      <ModalContent
+        className="p-10 min-h-screen justify-center absolute  z-50 w-full"
+        style={{ zIndex: 100 }}
+      >
         <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
           <div className="flex flex-col items-center p-5 w-full">
             <h2 className="text-lg font-bold mb-5 text-black border-b-2 border-gray-600 w-full items-center text-center">
