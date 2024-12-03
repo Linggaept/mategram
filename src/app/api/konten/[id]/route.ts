@@ -66,3 +66,44 @@ export async function DELETE(
     );
   }
 }
+
+export async function PATCH(
+  request: Request,
+  context:{ params: Promise<{ id: string }> }
+) {
+
+  const { id } = await context.params;
+  
+  if (!id) {
+    return NextResponse.json(
+      { error: "ID konten tidak disediakan" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const body = await request.json();
+    const { deskripsi } = body;
+
+    if (typeof deskripsi !== "string") {
+      return NextResponse.json(
+        { error: "Deskripsi harus berupa string" },
+        { status: 400 }
+      );
+    }
+
+    // Perbarui deskripsi konten
+    const updatedKonten = await prisma.konten.update({
+      where: { id },
+      data: { deskripsi },
+    });
+
+    return NextResponse.json(updatedKonten, { status: 200 });
+  } catch (error) {
+    console.error("Error updating konten:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan saat memperbarui konten" },
+      { status: 500 }
+    );
+  }
+}

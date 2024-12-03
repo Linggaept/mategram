@@ -33,11 +33,19 @@ export const UploadModal = ({
   const [preview, setPreview] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isVideo, setIsVideo] = useState<boolean>(false); // Check if file is a video
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
+
+      const fileType = selectedFile.type;
+      if (fileType.startsWith("video")) {
+        setIsVideo(true);
+      } else {
+        setIsVideo(false);
+      }
 
       // Generate preview URL
       const previewUrl = URL.createObjectURL(selectedFile);
@@ -70,6 +78,7 @@ export const UploadModal = ({
         setFile(null);
         setDescription("");
         setPreview(null);
+        setIsVideo(false);
         onClose();
         window.location.reload();
       } else {
@@ -93,7 +102,7 @@ export const UploadModal = ({
     >
       <OverlayOne />
       <ModalContent
-        className="p-10 min-h-screen justify-center absolute  z-50 w-full"
+        className="p-10 min-h-screen justify-center absolute z-50 w-full"
         style={{ zIndex: 100 }}
       >
         <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
@@ -111,13 +120,24 @@ export const UploadModal = ({
                     className="w-full h-full flex items-center justify-center cursor-pointer"
                   >
                     {preview ? (
-                      <Image
-                        src={preview}
-                        alt="Preview"
-                        className="object-cover w-full h-full"
-                        width={1000}
-                        height={1000}
-                      />
+                      isVideo ? (
+                        <video
+                          src={preview}
+                          controls
+                          className="object-cover w-full h-full"
+                          poster="/default-thumbnail.png" // Optional: Replace with a default poster
+                        >
+                          Browser Anda tidak mendukung video tag.
+                        </video>
+                      ) : (
+                        <Image
+                          src={preview}
+                          alt="Preview"
+                          className="object-cover w-full h-full"
+                          width={1000}
+                          height={1000}
+                        />
+                      )
                     ) : (
                       <span className="text-gray-400 text-sm">Pilih File</span>
                     )}

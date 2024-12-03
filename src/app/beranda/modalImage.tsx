@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@chakra-ui/modal";
 import { Text, Button } from "@chakra-ui/react";
 import Image from "next/image";
+import EditModal from "./editModal";
 
 // OverlayOne component
 const OverlayOne = () => (
@@ -31,6 +33,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
   const [content, setContent] = useState<any>(null); // Untuk menyimpan data konten
   const [loading, setLoading] = useState<boolean>(true);
   const [isDeleting, setIsDeleting] = useState<boolean>(false); // Untuk status penghapusan
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (contentId) {
@@ -65,6 +68,10 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditModalOpen(true);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -74,79 +81,94 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
   }
 
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose}>
-      <OverlayOne />
-      <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
-        <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-          <div className="">
-              {/* Render Image or Video */}
-              {content.type === "image" ? (
-                <Image
-                  src={`/api/viewKonten/${content.konten}`}
-                  alt={content.konten}
-                  width={1000}
-                  height={1000}
-                  className="aspect-square rounded-l-3xl object-cover"
-                />
-              ) : (
-                <video
-                  controls
-                  className="w-full h-full aspect-square rounded-l-3xl object-cover"
-                >
-                  <source src={`/api/viewKonten/${content.konten}`} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              )}
-            </div>
-            <div className="w-full flex flex-col justify-between h-full">
-              <div className="w-full border-b-2 border-gray-400">
-                <div className="p-5">
-                  <div className="flex items-center gap-2 w-full">
-                    <div className="flex">
-                      <Image
-                        src={`/fotoProfil/${content.kreator?.fotoProfil}`}
-                        alt={`/fotoProfil/${content.kreator?.fotoProfil}`}
-                        width={50}
-                        height={50}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    </div>
-                    <div className="flex">
-                      <h1 className="text-black font-semibold text-xl">
-                        {content.kreator?.nama}
-                      </h1>
+    <>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <OverlayOne />
+        <ModalContent className="p-10 min-h-screen justify-center absolute z-50 w-full">
+          <ModalBody className="mx-auto flex justify-center bg-white rounded-3xl overflow-hidden w-3/4">
+            <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+              <div className="">
+                {/* Render Image or Video */}
+                {content.type === "image" ? (
+                  <Image
+                    src={`/api/viewKonten/${content.konten}`}
+                    alt={content.konten}
+                    width={1000}
+                    height={1000}
+                    className="aspect-square rounded-l-3xl object-cover"
+                  />
+                ) : (
+                  <video
+                    controls
+                    className="w-full h-full aspect-square rounded-l-3xl object-cover"
+                  >
+                    <source
+                      src={`/api/viewKonten/${content.konten}`}
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+              </div>
+              <div className="w-full flex flex-col justify-between h-full">
+                <div className="w-full border-b-2 border-gray-400">
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="flex">
+                        <Image
+                          src={`/fotoProfil/${content.kreator?.fotoProfil}`}
+                          alt={`/fotoProfil/${content.kreator?.fotoProfil}`}
+                          width={50}
+                          height={50}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      </div>
+                      <div className="flex">
+                        <h1 className="text-black font-semibold text-xl">
+                          {content.kreator?.nama}
+                        </h1>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="w-full p-8 max-h-40 md:max-h-80 overflow-y-auto">
-                <Text className="text-black">{content.deskripsi}</Text>
-              </div>
-              <div className="flex gap-2 md:gap-4 p-4 md:p-8 mt-auto">
-                <button
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className={`px-6 py-2 text-lg rounded-full font-semibold border-2 ${
-                    isDeleting
-                      ? "text-gray-500 border-gray-500 bg-gray-200"
-                      : "text-red-700 border-red-700 bg-white"
-                  }`}
-                >
-                  {isDeleting ? "Menghapus..." : "Hapus"}
-                </button>
-                <button className="px-10 py-2 text-lg rounded-full font-semibold text-white bg-blue-600">
-                  Edit
-                </button>
+                <div className="w-full p-8 max-h-40 md:max-h-80 overflow-y-auto">
+                  <Text className="text-black">{content.deskripsi}</Text>
+                </div>
+                <div className="flex gap-2 md:gap-4 p-4 md:p-8 mt-auto">
+                  <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className={`px-6 py-2 text-lg rounded-full font-semibold border-2 ${
+                      isDeleting
+                        ? "text-gray-500 border-gray-500 bg-gray-200"
+                        : "text-red-700 border-red-700 bg-white"
+                    }`}
+                  >
+                    {isDeleting ? "Menghapus..." : "Hapus"}
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className="px-10 py-2 text-lg rounded-full font-semibold text-white bg-blue-600"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="absolute top-8 right-8">
-            <ModalCloseButton />
-          </div>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+            <div className="absolute top-8 right-8">
+              <ModalCloseButton />
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal Edit */}
+      <EditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        content={content}
+      />
+    </>
   );
 };
 
