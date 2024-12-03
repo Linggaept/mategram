@@ -60,7 +60,7 @@ export default function Daftar() {
             </Link>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <label htmlFor="nama" className="font-medium text-md">
                   Nama
