@@ -158,7 +158,7 @@ export const UploadModal = ({
                   placeholder="Tulis deskripsi konten disini..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="mb-4 text-sm font-normal text-black border border-gray-600 rounded-xl p-3 h-96"
+                  className="mb-4 text-sm font-normal text-black border border-gray-600 rounded-xl p-3 h-48 md:h-96"
                 />
                 <button
                   className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-full"
