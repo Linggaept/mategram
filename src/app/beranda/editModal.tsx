@@ -73,7 +73,7 @@ const EditModal = ({ isOpen, onClose, content }: EditModalProps) => {
               {content.type === "image" ? (
                 <Image
                   src={`/api/viewKonten/${content.konten}`}
-                  alt="Konten"
+                  alt={content.konten}
                   className="w-full h-full object-cover rounded-3xl"
                   width={300}
                   height={300}
