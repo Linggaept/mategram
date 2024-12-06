@@ -14,7 +14,7 @@ import Image from "next/image";
 const OverlayOne = () => (
   <ModalOverlay
     bg="blackAlpha.300"
-    backdropFilter="blur(10px) hue-rotate(90deg)"
+    backdropFilter="blur(10px) "
   />
 );
 

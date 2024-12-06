@@ -32,7 +32,7 @@ interface EditModalProps {
 const OverlayOne = () => (
   <ModalOverlay
     bg="blackAlpha.300"
-    backdropFilter="blur(10px) hue-rotate(90deg)"
+    backdropFilter="blur(10px)"
   />
 );
 
@@ -74,7 +74,7 @@ const EditModal = ({ isOpen, onClose, content }: EditModalProps) => {
                 <Image
                   src={`/api/viewKonten/${content.konten}`}
                   alt={content.konten}
-                  className="w-full h-full object-cover rounded-3xl"
+                  className="w-full h-full object-cover rounded-3xl aspect-square"
                   width={300}
                   height={300}
                 />

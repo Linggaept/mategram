@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
-import { useParams } from "next/navigation"; // Gunakan useParams
+import { useParams } from "next/navigation";
+
 import React, { useEffect, useState } from "react";
+import { SubscribeModalButton } from "../subscribeModalButton";
 
 const SubscriptionPage = () => {
   const { username } = useParams(); // Ambil username dari URL
   const [kreator, setKreator] = useState<any>(null);
+  const [subscribeModalOpen, setSubscribeModalOpen] = useState<boolean>(false);
+
+  const openSubscribeModal = () => {
+    setSubscribeModalOpen(true);
+  };
+
+  const closeSubscribeModal = () => {
+    setSubscribeModalOpen(false);
+  };
 
   useEffect(() => {
     if (username) {
@@ -36,7 +47,7 @@ const SubscriptionPage = () => {
       </div>
       <div className="w-full h-60">
         <Image
-          src={`/fotoBanner/${kreator.fotoBanner}`} // Menggunakan path relatif ke folder public
+          src={`/fotoBanner/${kreator.fotoBanner}`}
           alt="Banner"
           width={1000}
           height={1000}
@@ -77,10 +88,19 @@ const SubscriptionPage = () => {
           </div>
 
           <div className="mt-8 w-8/12 mx-auto  text-center flex justify-center">
-            <button className="bg-blue-600 text-white  rounded-full px-40 py-3 text-lg font-semibold justify-center flex">
+            <button
+              onClick={openSubscribeModal}
+              className="bg-blue-600 text-white rounded-full px-20 md:px-52 py-3 text-lg font-semibold justify-center flex"
+            >
               Subscribe
             </button>
           </div>
+
+          <SubscribeModalButton
+            isOpen={subscribeModalOpen}
+            onClose={closeSubscribeModal}
+            kreator={kreator}
+          />
         </div>
       </div>
     </main>

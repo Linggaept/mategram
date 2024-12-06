@@ -16,6 +16,7 @@ export async function GET(
         deskripsi: true,
         fotoProfil: true,
         fotoBanner: true,
+        biayaSubscription : true,
         _count: {
           select: {
             konten: true, // ambil jumlah konten yang dimiliki kreator
