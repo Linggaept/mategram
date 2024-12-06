@@ -8,6 +8,7 @@ import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import ViewImage from "../modalImage";
 import UploadModal from "../uploadModal";
+import ShareButton from "../shareButton";
 
 export default function Beranda() {
   const [kreator, setKreator] = useState<any>(null);
@@ -130,9 +131,7 @@ export default function Beranda() {
               Pengaturan
             </button>
 
-            <button className="bg-blue-600 text-white border border-white rounded-full px-8 py-2 text-lg font-semibold justify-center flex">
-              Bagikan
-            </button>
+            <ShareButton username={kreator.username} />
           </div>
         </div>
 
