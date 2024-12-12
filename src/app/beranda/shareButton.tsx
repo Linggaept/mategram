@@ -6,7 +6,7 @@ interface ShareButtonProps {
 
 const ShareButton = ({ username }: ShareButtonProps) => {
   const handleShare = () => {
-    const profileLink = `http://localhost:3000/subscription/${username}`;
+    const profileLink = `http://103.193.179.230/subscription/${username}`;
     navigator.clipboard
       .writeText(profileLink)
       .then(() => {
