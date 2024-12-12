@@ -7,7 +7,6 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-
   try {
     const { id } = await context.params;
     // Ambil data kreator berdasarkan ID dan konten yang dimilikinya
@@ -17,18 +16,18 @@ export async function GET(
       },
       select: {
         id: true,
-        nama: true, // ambil nama kreator
-        username: true, // ambil username kreator
-        deskripsi: true, // ambil deskripsi kreator
-        fotoProfil: true, // ambil foto profil kreator
-        fotoBanner: true, // ambil foto banner kreator
+        nama: true,
+        username: true,
+        deskripsi: true,
+        fotoProfil: true,
+        fotoBanner: true,
         konten: {
           // ambil konten yang dimiliki kreator
           select: {
             id: true,
-            konten: true, // ambil nama file/video konten
-            deskripsi: true, // deskripsi konten
-            type: true, // tipe konten (file/video)
+            konten: true,
+            deskripsi: true,
+            type: true,
           },
         },
         _count: {
@@ -53,7 +52,8 @@ export async function GET(
     if (kreator) {
       return NextResponse.json({
         ...kreator,
-        totalKodeSubscription: totalKodeSubscription._count.kodeSubscription || 0, // tambahkan total kodeSubscription
+        totalKodeSubscription:
+          totalKodeSubscription._count.kodeSubscription || 0, // tambahkan total kodeSubscription
       });
     } else {
       return NextResponse.json(

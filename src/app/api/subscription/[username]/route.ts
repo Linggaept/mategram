@@ -47,7 +47,6 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(kreator);
   } catch (error) {
     return NextResponse.json(
       { message: "Terjadi kesalahan", error: error },
