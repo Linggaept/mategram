@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Buat transaksi
+    // Buat transaksi di Midtrans
     const transaction = await snap.createTransaction({
       transaction_details: {
         order_id: `order-${Date.now()}`, // ID transaksi unik
@@ -37,7 +37,24 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(transaction, { status: 200 });
+    // Membuat entri transaksi di database
+    const newTransaction = await prisma.transaksi.create({
+      data: {
+        id: transaction.order_id,
+        totalTransaksi: amount,
+        statusTransaksi: "pending", // Status transaksi awal
+        kreatorId: kreatorId, // ID kreator yang terkait
+        // Jika kamu punya informasi Subscriber, kamu bisa menambahkannya di sini
+        // subscriberId: subscriberId,
+      },
+    });
+
+    // Mengembalikan response dengan data transaksi Midtrans dan ID transaksi yang baru dibuat
+    return NextResponse.json({
+      transaction,
+      newTransaction,
+    }, { status: 200 });
+
   } catch (error) {
     console.error("Error creating transaction:", error);
     return NextResponse.json(
@@ -46,3 +63,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

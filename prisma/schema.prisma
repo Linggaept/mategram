@@ -56,11 +56,13 @@ model Transaksi {
   tanggal         DateTime       @default(now())
   totalTransaksi  Float
   statusTransaksi String
-  kreatorId       String
-  subscriberId    String
+  kreatorId       String?
+  subscriberId    String?
+  paymentStatus   String?
+  paymentType     String?
   subscription    Subscription[]
-  kreator         Kreator        @relation(fields: [kreatorId], references: [id])
-  subscriber      Subscriber     @relation(fields: [subscriberId], references: [id])
+  kreator         Kreator?       @relation(fields: [kreatorId], references: [id])
+  subscriber      Subscriber?    @relation(fields: [subscriberId], references: [id])
 }
 
 model Subscription {
