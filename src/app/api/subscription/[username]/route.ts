@@ -27,7 +27,7 @@ export async function GET(
 
     const totalKodeSubscription = await prisma.subscription.aggregate({
       where: {
-        kreatorId: username, // hanya hitung subscription untuk kreator ini
+        kreatorId: kreator?.id, // hanya hitung subscription untuk kreator ini
       },
       _count: {
         kodeSubscription: true, // hitung jumlah kodeSubscription
@@ -35,6 +35,7 @@ export async function GET(
     });
 
     if (kreator) {
+      console.log(totalKodeSubscription);
       return NextResponse.json({
         ...kreator,
         totalKodeSubscription:

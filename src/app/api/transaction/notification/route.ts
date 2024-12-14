@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
-import { snap } from "../../../../utils/configs/payment";
 
 export async function POST(req: Request) {
   try {
     const notification = await req.json();
 
-    const { order_id, transaction_status, payment_type, amount } = notification;
+    const { order_id, transaction_status, payment_type, gross_amount } =
+      notification;
 
     // Temukan transaksi berdasarkan order_id
     const transaction = await prisma.transaksi.findUnique({
@@ -22,10 +22,10 @@ export async function POST(req: Request) {
     }
 
     // Perbarui status transaksi di database
-    await prisma.transaksi.update({
+    const updatedTransaction = await prisma.transaksi.update({
       where: { id: order_id },
       data: {
-        totalTransaksi: amount,
+        totalTransaksi: parseFloat(gross_amount), // Pastikan gross_amount adalah string angka
         paymentStatus: transaction_status,
         paymentType: payment_type,
         statusTransaksi:
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { message: "Notifikasi berhasil diproses." },
+      { message: "Notifikasi berhasil diproses.", data: updatedTransaction },
       { status: 200 }
     );
   } catch (error) {

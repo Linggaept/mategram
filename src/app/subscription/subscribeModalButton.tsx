@@ -27,7 +27,7 @@ export const SubscribeModalButton = ({
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     try {
       const response = await fetch("/api/subscribe", {
         method: "POST",
@@ -36,18 +36,25 @@ export const SubscribeModalButton = ({
         },
         body: JSON.stringify({ email }),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         sessionStorage.setItem("emailSubscriber", email);
-        
+
+        const storedEmail = sessionStorage.getItem("emailSubscriber");
+
+        if (!storedEmail) {
+          alert("Email subscriber tidak ditemukan.");
+          return;
+        }
+
         // Pastikan kreator memiliki data yang diperlukan untuk transaksi
         if (!kreator || !kreator.id || !kreator.biayaSubscription) {
           alert("Data kreator tidak valid.");
           return;
         }
-  
+
         // Mulai transaksi
         const transactionResponse = await fetch("/api/transaction/start", {
           method: "POST",
@@ -60,9 +67,9 @@ export const SubscribeModalButton = ({
             amount: kreator.biayaSubscription,
           }),
         });
-  
+
         const transactionData = await transactionResponse.json();
-  
+
         if (transactionResponse.ok && transactionData.transaction) {
           // Periksa apakah redirect_url ada
           if (transactionData.transaction.redirect_url) {
@@ -81,7 +88,6 @@ export const SubscribeModalButton = ({
       alert("Terjadi kesalahan.");
     }
   };
-  
 
   const OverlayOne = () => (
     <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />

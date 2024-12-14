@@ -14,6 +14,18 @@ export async function POST(req: Request) {
       );
     }
 
+    // Cari subscriber berdasarkan email
+    const subscriber = await prisma.subscriber.findUnique({
+      where: { email },
+    });
+
+    if (!subscriber) {
+      return NextResponse.json(
+        { error: "Subscriber tidak ditemukan." },
+        { status: 404 }
+      );
+    }
+
     // Periksa apakah kreator ada
     const kreator = await prisma.kreator.findUnique({
       where: { id: kreatorId },
@@ -44,8 +56,7 @@ export async function POST(req: Request) {
         totalTransaksi: amount,
         statusTransaksi: "pending", // Status transaksi awal
         kreatorId: kreatorId, // ID kreator yang terkait
-        // Jika kamu punya informasi Subscriber, kamu bisa menambahkannya di sini
-        // subscriberId: subscriberId,
+        subscriberId: subscriber.id, // ID subscriber
       },
     });
 
@@ -63,4 +74,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
 
