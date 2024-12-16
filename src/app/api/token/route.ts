@@ -5,12 +5,12 @@ import prisma from "../../../../lib/prisma";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { kreatorId, subscriberId, transaksiId } = body;
+    const { kreatorId, subscriberEmail, transaksiId } = body;
 
-    if (!kreatorId || !subscriberId || !transaksiId) {
+    if (!kreatorId || !subscriberEmail || !transaksiId) {
       console.error("Session storage data:", {
         kreatorId,
-        subscriberId,
+        subscriberEmail,
         transaksiId,
       });
       throw new Error(
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     // Validasi keberadaan subscriber berdasarkan email
     const subscriber = await prisma.subscriber.findUnique({
-      where: { email: subscriberId },
+      where: { email: subscriberEmail },
     });
 
     if (!subscriber) {

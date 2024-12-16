@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       data: {
         id: transaction.order_id,
         totalTransaksi: amount,
-        statusTransaksi: "pending", // Status transaksi awal
+        statusTransaksi: "sukses", // Status transaksi awal
         kreatorId: kreatorId, // ID kreator yang terkait
         subscriberId: subscriber.id, // ID subscriber
       },

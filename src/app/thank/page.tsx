@@ -13,13 +13,13 @@ export default function ThankPage() {
     try {
       const kreatorUsername = sessionStorage.getItem("kreatorUsername");
       const kreatorId = sessionStorage.getItem("idKreator");
-      const subscriberId = sessionStorage.getItem("emailSubscriber");
+      const subscriberEmail = sessionStorage.getItem("emailSubscriber");
       const transaksiId = sessionStorage.getItem("idTransaksi");
 
-      if (!kreatorId || !subscriberId || !transaksiId) {
+      if (!kreatorId || !subscriberEmail || !transaksiId) {
         console.error("Session storage data:", {
           kreatorId,
-          subscriberId,
+          subscriberEmail,
           transaksiId,
         });
       }
@@ -29,7 +29,7 @@ export default function ThankPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           kreatorId,
-          subscriberId,
+          subscriberEmail,
           transaksiId,
         }),
       });
@@ -41,7 +41,7 @@ export default function ThankPage() {
 
       const data = await response.json();
       setMessage(
-        `Token berhasil diklaim: ${data.subscription.kodeSubscription} \n Silahkan Pergi Ke Halaman https://99bc-114-10-44-228.ngrok-free.app/${kreatorUsername}/input-token`
+        `Token berhasil diklaim: ${data.subscription.kodeSubscription} \n Silahkan Pergi Ke Halaman https://99bc-114-10-44-228.ngrok-free.app/${kreatorUsername}/input-token/${data.subscription.subscriberId}`
       );
     } catch (error: any) {
       setMessage(`Error: ${error.message}`);
