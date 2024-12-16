@@ -40,7 +40,10 @@ export const SubscribeModalButton = ({
       const result = await response.json();
 
       if (response.ok) {
+        sessionStorage.setItem("idSubscriber", result.id);
         sessionStorage.setItem("emailSubscriber", email);
+        sessionStorage.setItem("idKreator", kreator.id);
+        sessionStorage.setItem("kreatorUsername", kreator.username);
 
         const storedEmail = sessionStorage.getItem("emailSubscriber");
 
@@ -71,6 +74,7 @@ export const SubscribeModalButton = ({
         const transactionData = await transactionResponse.json();
 
         if (transactionResponse.ok && transactionData.transaction) {
+          sessionStorage.setItem("idTransaksi", transactionData.transaction.id);
           // Periksa apakah redirect_url ada
           if (transactionData.transaction.redirect_url) {
             window.location.href = transactionData.transaction.redirect_url; // Lakukan pengalihan ke URL pembayaran Midtrans

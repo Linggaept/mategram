@@ -1,15 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+"use client"
+import ViewImage from "@/app/beranda/modalImage";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function InputToken() {
-  const { username } = useParams(); // Ambil username dari URL
+export default function SubscribedPage() {
   const [kreator, setKreator] = useState<any>(null);
-  const [token, setToken] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Router dari next/navigation
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedContentId, setSelectedContentId] = useState<string>("");
+
+  const openModal = (contentId: string) => {
+    setSelectedContentId(contentId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const { username } = useParams(); // Ambil ID dari URL
+
+  // Redirect ke halaman login jika token tidak ada
   useEffect(() => {
     if (username) {
       // Fetch data kreator
@@ -24,34 +38,12 @@ export default function InputToken() {
     }
   }, [username]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Memanggil API untuk verifikasi token
-    const response = await fetch(`/api/subscribed/${username}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Jika token valid, arahkan ke halaman kreator
-      router.push(`/subscribed/${data.username}`);
-    } else {
-      // Tampilkan error jika token tidak valid
-      setError(data.message);
-    }
-  };
-
-  if (!kreator) {
+  if (loading) {
     return <p>Loading...</p>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (!kreator) {
+    return <p>Loading...</p>;
   }
 
   return (
@@ -64,7 +56,7 @@ export default function InputToken() {
       </div>
       <div className="w-full h-60">
         <Image
-          src={`/fotoBanner/${kreator.fotoBanner}`}
+          src={`/fotoBanner/${kreator.fotoBanner}`} // Menggunakan path relatif ke folder public
           alt="Banner"
           width={1000}
           height={1000}
@@ -103,25 +95,50 @@ export default function InputToken() {
               <p className="font-normal text-gray-400 text-lg">Subscriber</p>
             </div>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="mt-8 w-8/12 mx-auto text-center flex justify-center">
-              <input
-                type="text"
-                className="w-full px-4 py-2 border-4 rounded-l-full focus:outline-none focus:border-blue-500 border-blue-600"
-                placeholder="Masukan Token"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-                required
-              />
+        </div>
 
-              <button
-                type="submit"
-                className="px-8 py-2 bg-blue-600 text-white rounded-r-full"
-              >
-                Pakai
-              </button>
+        <div className="flex flex-col w-full">
+          <div className="flex justify-center mx-auto w-3/4">
+            <p className="border-b-2 border-black w-full text-center text-xl p-5">
+              Konten
+            </p>
+          </div>
+
+          <div className="pb-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 w-3/4 mx-auto">
+              {/* Gambar konten */}
+              {kreator.konten.map((item: any) => (
+                <div
+                  key={item.id}
+                  className="aspect-square bg-gray-400 rounded-xl cursor-pointer"
+                  onClick={() => openModal(item.id)} // Buka modal saat gambar diklik
+                >
+                  {item.type === "video" ? (
+                    <video
+                      src={`/api/viewKonten/${item.konten}`}
+                      width={1000}
+                      height={1000}
+                      className="object-cover w-full h-full rounded-xl"
+                    />
+                  ) : (
+                    <Image
+                      src={`/api/viewKonten/${item.konten}`}
+                      alt={item.konten}
+                      width={1000}
+                      height={1000}
+                      className="object-cover w-full h-full rounded-xl"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          </form>
+
+            <ViewImage
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              contentId={selectedContentId} // Kirimkan contentId yang dipilih
+            />
+          </div>
         </div>
       </div>
     </main>
