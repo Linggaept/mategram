@@ -6,17 +6,22 @@ interface ShareButtonProps {
 
 const ShareButton = ({ username }: ShareButtonProps) => {
   const handleShare = () => {
-    const profileLink = `http://103.193.179.230/subscription/${username}`;
-    navigator.clipboard
-      .writeText(profileLink)
-      .then(() => {
-        alert("Link profil telah disalin ke clipboard!");
-      })
-      .catch((err) => {
-        console.error("Gagal menyalin link:", err);
-        alert("Gagal menyalin link.");
-      });
+    if (typeof window !== "undefined" && navigator.clipboard) {
+      const profileLink = `http://103.193.179.230/subscription/${username}`;
+      navigator.clipboard
+        .writeText(profileLink)
+        .then(() => {
+          alert("Link profil telah disalin ke clipboard!");
+        })
+        .catch((err) => {
+          console.error("Gagal menyalin link:", err);
+          alert("Gagal menyalin link.");
+        });
+    } else {
+      alert("Browser tidak mendukung fitur clipboard.");
+    }
   };
+  
 
   return (
     <button
