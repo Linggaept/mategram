@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid"; // Library untuk membuat token unik
 import prisma from "../../../../lib/prisma";
+import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
   try {
@@ -21,6 +22,10 @@ export async function POST(req: Request) {
     // Validasi keberadaan kreator berdasarkan email
     const kreator = await prisma.kreator.findUnique({
       where: { id: kreatorId },
+      select: {
+        id: true,
+        username: true,
+      }
     });
 
     if (!kreator) {
@@ -67,6 +72,44 @@ export async function POST(req: Request) {
         transaksiId: transaksi.id,
       },
     });
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_RECEIVER,
+        to: subscriberEmail,
+        replyTo: process.env.EMAIL_RECEIVER,
+        subject: "Selamat Berlangganan Konten Eksklusif!",
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5; max-width: 600px; margin: auto;">
+          <p>Selamat siang,</p>
+          <p>
+            Selamat Anda telah berlangganan konten eksklusif dari
+            <strong>${kreator.username}</strong>. Berikut link dan kode untuk mengakses konten eksklusif:
+          </p>
+          <p>
+            <strong>Kode</strong>: ${kodeSubscription}<br />
+            <strong>Link</strong>: 
+            <a href="https://www.mategram.online/subscription/${kreator.username}/input-token/${subscriber.id}" style="color: #007bff; text-decoration: none;">
+              https://www.mategram.online/subscription/${kreator.username}/input-token/${subscriber.id}
+            </a>
+          </p>
+          <p style="margin-top: 20px;">Terimakasih,<br />Mategram</p>
+        </div>
+        `,
+      });
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
 
     return NextResponse.json(
       {

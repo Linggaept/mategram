@@ -117,6 +117,10 @@ export default function SubscribedPage() {
               <p className="font-normal text-gray-400 text-lg">Subscriber</p>
             </div>
           </div>
+
+          <div className="text-center mt-4 py-2 px-6 bg-gray-600 rounded-full w-1/2 mx-auto">
+            <p className="font-normal text-lg">Subscribed</p>
+          </div> 
         </div>
 
         <div className="flex flex-col w-full">

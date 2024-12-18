@@ -52,13 +52,7 @@ export const ModalKonten = ({
     }
   }, [contentId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!content) {
-    return <div>Konten tidak ditemukan</div>;
-  }
+  if(!content) return null
 
   return (
     <>

@@ -11,7 +11,6 @@ export default function ThankPage() {
     setMessage(null);
 
     try {
-      const kreatorUsername = sessionStorage.getItem("kreatorUsername");
       const kreatorId = sessionStorage.getItem("idKreator");
       const subscriberEmail = sessionStorage.getItem("emailSubscriber");
       const transaksiId = sessionStorage.getItem("idTransaksi");
@@ -39,10 +38,7 @@ export default function ThankPage() {
         throw new Error(error.error || "Gagal mengambil token.");
       }
 
-      const data = await response.json();
-      setMessage(
-        `Token berhasil diklaim: ${data.subscription.kodeSubscription} \n Silahkan Pergi Ke Halaman https://mategram.online/${kreatorUsername}/input-token/${data.subscription.subscriberId}`
-      );
+      setMessage(`Kode berhasil diklaim! Silahkan cek Email Anda!`);
     } catch (error: any) {
       setMessage(`Error: ${error.message}`);
     } finally {
@@ -53,13 +49,12 @@ export default function ThankPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-4xl font-bold text-gray-800">Pembayaran Sukses!</h1>
-      <h1 className="text-xl font-bold text-gray-800">id Transaksi: {sessionStorage.getItem("idTransaksi")}</h1>
       <button
         onClick={handleClaimToken}
         className="bg-blue-600 text-white border border-white rounded-full px-8 py-2 text-lg font-semibold justify-center flex mt-4"
         disabled={isClaiming} // Nonaktifkan tombol selama proses
       >
-        {isClaiming ? "Loading..." : "Claim Token"}
+        {isClaiming ? "Loading..." : "Claim Kode"}
       </button>
 
       {message && (
