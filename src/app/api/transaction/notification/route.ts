@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
 
@@ -6,10 +7,20 @@ export async function POST(req: Request) {
   try {
     const notification = await req.json();
 
-    const { order_id, transaction_status, payment_type, gross_amount } =
-      notification;
+    console.log("Notification received:", notification);  // Menambahkan log untuk melihat data yang diterima
 
-    // Temukan transaksi berdasarkan order_id
+    const { order_id, transaction_status, payment_type, gross_amount } = notification;
+
+    // Validasi order_id sebagai UUID
+    if (!uuidValidate(order_id)) {
+      console.error("Invalid order_id:", order_id);  // Log jika order_id tidak valid
+      return NextResponse.json(
+        { error: "order_id tidak valid." },
+        { status: 400 }
+      );
+    }
+
+    // Temukan transaksi berdasarkan order_id (yang sudah valid UUID)
     const transaction = await prisma.transaksi.findUnique({
       where: { id: order_id },
     });

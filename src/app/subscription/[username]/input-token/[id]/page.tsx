@@ -5,14 +5,16 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function InputToken() {
-  const { username } = useParams(); // Ambil username dari URL
+  const { username, id } = useParams();
   const [kreator, setKreator] = useState<any>(null);
   const [token, setToken] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Router dari next/navigation
+  const router = useRouter();
+
   useEffect(() => {
-    if (username) {
-      // Fetch data kreator
+    if (username && id) {
+      sessionStorage.setItem("idSubscriber", id as string);
+
       fetch(`/api/subscription/${username}`)
         .then((response) => response.json())
         .then((data) => {
@@ -22,26 +24,28 @@ export default function InputToken() {
           console.error("Error fetching kreator data:", err);
         });
     }
-  }, [username]);
+  }, [username, id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Memanggil API untuk verifikasi token
+    const subscriberId = sessionStorage.getItem("idSubscriber");
     const response = await fetch(`/api/subscribed/${username}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token, subscriberId, kreatorId: kreator.id }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      // Jika token valid, arahkan ke halaman kreator
+      // Simpan JWT token ke session storage
+      sessionStorage.setItem("subscriberToken", data.jwtToken);
+
+      // Redirect ke halaman kreator
       router.push(`/subscribed/${data.username}`);
     } else {
-      // Tampilkan error jika token tidak valid
       setError(data.message);
     }
   };
@@ -89,20 +93,6 @@ export default function InputToken() {
           </h2>
           <p className="mt-4 font-normal">{kreator.deskripsi}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-1/2 mx-auto">
-            <div className="flex flex-col">
-              <h1 className="font-semibold text-3xl">
-                {kreator._count?.konten}
-              </h1>
-              <p className="font-normal text-gray-400 text-lg">Postingan</p>
-            </div>
-            <div className="flex flex-col">
-              <h1 className="font-semibold text-3xl">
-                {kreator.totalKodeSubscription}
-              </h1>
-              <p className="font-normal text-gray-400 text-lg">Subscriber</p>
-            </div>
-          </div>
           <form onSubmit={handleSubmit}>
             <div className="mt-8 w-8/12 mx-auto text-center flex justify-center">
               <input

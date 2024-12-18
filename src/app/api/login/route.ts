@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     // Cari user berdasarkan email
     const user = await prisma.kreator.findUnique({
-      where: { email },
+      where: {  email },
     });
 
     if (!user) {
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: "Login berhasil",
       id: user.id,
+      username: user.username,
       token,
     });
   } catch (error) {

@@ -5,14 +5,14 @@ import prisma from "../../../../../lib/prisma";
 // API untuk mengambil data kreator berdasarkan ID
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ username: string }> }
 ) {
   try {
-    const { id } = await context.params;
+    const { username } = await context.params;
     // Ambil data kreator berdasarkan ID dan konten yang dimilikinya
     const kreator = await prisma.kreator.findUnique({
       where: {
-        id: id, // mencari kreator berdasarkan ID
+        username: username, // mencari kreator berdasarkan username
       },
       select: {
         id: true,
@@ -41,7 +41,7 @@ export async function GET(
     // Hitung jumlah kodeSubscription pada model Subscription
     const totalKodeSubscription = await prisma.subscription.aggregate({
       where: {
-        kreatorId: id, // hanya hitung subscription untuk kreator ini
+        kreatorId: kreator?.id, // hanya hitung subscription untuk kreator ini
       },
       _count: {
         kodeSubscription: true, // hitung jumlah kodeSubscription

@@ -35,11 +35,11 @@ export default function Beranda() {
 
   const token = localStorage.getItem("token");
 
-  const { id } = useParams(); // Ambil ID dari URL
+  const { username } = useParams(); // Ambil username dari URL
 
   const router = useRouter();
 
-  // Redirect ke halaman login jika token tidak ada
+  // Redirect ke halaman login jika token tusernameak ada
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -47,11 +47,11 @@ export default function Beranda() {
     }
   }, [token, router]);
 
-  // Ambil data kreator berdasarkan ID yang diambil dari URL
+  // Ambil data kreator berdasarkan username yang diambil dari URL
   useEffect(() => {
-    if (token && id) {
+    if (token && username) {
       axios
-        .get(`/api/kreator/${id}`, {
+        .get(`/api/kreator/${username}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -66,7 +66,7 @@ export default function Beranda() {
           setLoading(false);
         });
     }
-  }, [token, id]); // Update jika token atau id berubah
+  }, [token, username]); // Update jika token atau id berubah
 
   if (loading) {
     return <div>Loading...</div>;

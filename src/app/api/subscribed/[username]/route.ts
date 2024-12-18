@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 export async function POST(
   request: Request,
@@ -8,35 +11,47 @@ export async function POST(
   try {
     const { username } = await context.params;
     const body = await request.json();
-    const { token } = body; // Ambil token dari body request
+    const { token, subscriberId, kreatorId } = body;
 
-    // Cek apakah token valid dan sesuai dengan username kreator
     const subscription = await prisma.subscription.findFirst({
       where: {
         kodeSubscription: token,
+        kreatorId: kreatorId,
+        subscriberId: subscriberId,
         kreator: {
-          username: username, // Pastikan token sesuai dengan kreator yang dimaksud
+          username: username,
         },
       },
     });
 
     if (subscription) {
-      // Jika token valid, arahkan subscriber ke halaman kreator
+      // Generate JWT token
+      const jwtToken = jwt.sign(
+        {
+          subscriberId,
+          kreatorId,
+          username,
+        },
+        JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
       return NextResponse.json({
         success: true,
         message: "Token valid. Arahkan ke halaman kreator.",
-        username: username,
+        username,
+        jwtToken, // Kirim token JWT ke frontend
       });
     } else {
-      // Jika token tidak valid
       return NextResponse.json(
-        { message: "Token tidak valid atau tidak sesuai dengan kreator." },
+        { message: "Token tidak valid atau data tidak sesuai." },
         { status: 400 }
       );
     }
   } catch (error) {
+    console.error("Error in subscription verification:", error);
     return NextResponse.json(
-      { message: "Terjadi kesalahan", error: error },
+      { message: "Terjadi kesalahan", error },
       { status: 500 }
     );
   }

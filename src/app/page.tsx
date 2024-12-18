@@ -27,8 +27,8 @@ export default function Login() {
       setMessage(response.data.message);
 
       // Redirect ke halaman beranda dengan ID
-      const userId = response.data.id; // ID pengguna dari respons API
-      router.push(`/beranda/${userId}`); // Gunakan router.push untuk redirect
+      const username = response.data.username; // ID pengguna dari respons API
+      router.push(`/beranda/${username}`); // Gunakan router.push untuk redirect
     } catch (err: any) {
       setError(err.response?.data?.message || "Terjadi kesalahan");
     }

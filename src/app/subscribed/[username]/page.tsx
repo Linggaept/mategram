@@ -1,62 +1,84 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
-import ViewImage from "@/app/beranda/modalImage";
+"use client";
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import ModalKonten from "../modalKonten";
 
 export default function SubscribedPage() {
   const [kreator, setKreator] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedContentId, setSelectedContentId] = useState<string>("");
+  const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
+
+  const { username } = useParams(); // Ambil username dari URL
+  const router = useRouter();
 
   const openModal = (contentId: string) => {
     setSelectedContentId(contentId);
     setIsModalOpen(true);
   };
 
+  const openUploadModal = () => {
+    setUploadModalOpen(true);
+  };
+
+  const closeUploadModal = () => {
+    setUploadModalOpen(false);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const { username } = useParams(); // Ambil ID dari URL
+  // Validasi subscriberToken di sessionStorage
+  useEffect(() => {
+    const subscriberToken = sessionStorage.getItem("subscriberToken");
+    if (!subscriberToken) {
+      router.push("/"); // Redirect jika token tidak ada
+    }
+  }, [router]);
 
-  // Redirect ke halaman login jika token tidak ada
+  // Ambil data kreator berdasarkan username yang diambil dari URL
   useEffect(() => {
     if (username) {
-      // Fetch data kreator
-      fetch(`/api/subscription/${username}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setKreator(data);
+      axios
+        .get(`/api/kreator/${username}`)
+        .then((response) => {
+          setKreator(response.data); // Simpan data kreator
+          console.log(response.data);
+          setLoading(false);
         })
-        .catch((err) => {
-          console.error("Error fetching kreator data:", err);
+        .catch((error) => {
+          console.error("Error fetching kreator:", error);
+          setLoading(false);
         });
     }
   }, [username]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div>Loading...</div>;
   }
 
   if (!kreator) {
-    return <p>Loading...</p>;
+    return <div>Kreator tidak ditemukan</div>;
   }
 
   return (
     <main>
       <div className="absolute left-6 top-6">
-        <div className="flex items-center mx-auto ">
+        <div className="flex items-center mx-auto">
           <Image src="/Logo.png" alt="Logo" width={35} height={35} />
           <h1 className="font-semibold text-center text-2xl ml-2">Mategram</h1>
         </div>
       </div>
       <div className="w-full h-60">
         <Image
-          src={`/fotoBanner/${kreator.fotoBanner}`} // Menggunakan path relatif ke folder public
+          src={`/fotoBanner/${kreator.fotoBanner}`}
           alt="Banner"
           width={1000}
           height={1000}
@@ -111,7 +133,7 @@ export default function SubscribedPage() {
                 <div
                   key={item.id}
                   className="aspect-square bg-gray-400 rounded-xl cursor-pointer"
-                  onClick={() => openModal(item.id)} // Buka modal saat gambar diklik
+                  onClick={() => openModal(item.id)}
                 >
                   {item.type === "video" ? (
                     <video
@@ -119,6 +141,7 @@ export default function SubscribedPage() {
                       width={1000}
                       height={1000}
                       className="object-cover w-full h-full rounded-xl"
+                      controls
                     />
                   ) : (
                     <Image
@@ -133,10 +156,10 @@ export default function SubscribedPage() {
               ))}
             </div>
 
-            <ViewImage
+            <ModalKonten
               isOpen={isModalOpen}
               onClose={closeModal}
-              contentId={selectedContentId} // Kirimkan contentId yang dipilih
+              contentId={selectedContentId}
             />
           </div>
         </div>

@@ -52,8 +52,8 @@ export default function ThankPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-gray-800">Terima kasih!</h1>
-
+      <h1 className="text-4xl font-bold text-gray-800">Pembayaran Sukses!</h1>
+      <h1 className="text-xl font-bold text-gray-800">id Transaksi: {sessionStorage.getItem("idTransaksi")}</h1>
       <button
         onClick={handleClaimToken}
         className="bg-blue-600 text-white border border-white rounded-full px-8 py-2 text-lg font-semibold justify-center flex mt-4"
