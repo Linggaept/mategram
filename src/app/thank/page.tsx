@@ -41,7 +41,7 @@ export default function ThankPage() {
 
       const data = await response.json();
       setMessage(
-        `Token berhasil diklaim: ${data.subscription.kodeSubscription} \n Silahkan Pergi Ke Halaman https://99bc-114-10-44-228.ngrok-free.app/${kreatorUsername}/input-token/${data.subscription.subscriberId}`
+        `Token berhasil diklaim: ${data.subscription.kodeSubscription} \n Silahkan Pergi Ke Halaman https://mategram.online/${kreatorUsername}/input-token/${data.subscription.subscriberId}`
       );
     } catch (error: any) {
       setMessage(`Error: ${error.message}`);
