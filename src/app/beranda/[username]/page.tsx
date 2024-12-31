@@ -39,6 +39,10 @@ export default function Beranda() {
 
   const router = useRouter();
 
+  const handlePengaturan = () => {
+    router.push(`/beranda/${username}/pengaturan`);
+  };
+
   // Redirect ke halaman login jika token tusernameak ada
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -127,7 +131,10 @@ export default function Beranda() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-8/12 mx-auto">
-            <button className="bg-white text-blue-600 border border-blue-600 rounded-full px-8 py-2 text-lg font-semibold justify-center flex">
+            <button
+              onClick={handlePengaturan}
+              className="bg-white text-blue-600 border border-blue-600 rounded-full px-8 py-2 text-lg font-semibold justify-center flex"
+            >
               Pengaturan
             </button>
 
@@ -153,11 +160,11 @@ export default function Beranda() {
                 >
                   {item.type === "video" ? (
                     <video
-                    src={`/api/viewKonten/${item.konten}`}
-                    width={1000}
-                    height={1000}
-                    className="object-cover w-full h-full rounded-xl"
-                  />
+                      src={`/api/viewKonten/${item.konten}`}
+                      width={1000}
+                      height={1000}
+                      className="object-cover w-full h-full rounded-xl"
+                    />
                   ) : (
                     <Image
                       src={`/api/viewKonten/${item.konten}`}
