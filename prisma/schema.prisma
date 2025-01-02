@@ -27,12 +27,20 @@ model Kreator {
   fotoBanner        String?
   deskripsi         String?
   statusAkun        Boolean             @default(false)
-  rekening          String?
   biayaSubscription Float
   konten            Konten[]
   pembayaranKreator PembayaranKreator[]
   subscription      Subscription[]
   transaksi         Transaksi[]
+  rekening          Rekening?           @relation(fields: [rekeningId], references: [id])
+  rekeningId        String?             @unique
+}
+
+model Rekening {
+  id            String   @id @default(uuid())
+  namaRekening  String
+  nomorRekening String
+  kreator       Kreator? @relation
 }
 
 model Subscriber {

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -12,7 +13,7 @@ import Akademi from "./sidebar/akademi";
 import Subscription from "./sidebar/subscription";
 import Penghasilan from "./sidebar/penghasilan";
 
-const SidebarWithHeader = () => {
+export const SidebarWithHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [activeTab, setActiveTab] = useState("Profil");
@@ -52,7 +53,9 @@ const SidebarWithHeader = () => {
       case "Penghasilan":
         return <Penghasilan />;
       default:
-        return <div className="p-4 text-black">Pilih tab untuk melihat konten.</div>;
+        return (
+          <div className="p-4 text-black">Pilih tab untuk melihat konten.</div>
+        );
     }
   };
 
@@ -160,9 +163,7 @@ const SidebarWithHeader = () => {
         <div
           className={`flex-1 p-4 ${isDesktop ? "ml-64" : ""} mt-20`} // Adjust margin for content area
         >
-          <main>
-            {renderContent()}
-          </main>
+          <main>{renderContent()}</main>
         </div>
       </div>
     </div>

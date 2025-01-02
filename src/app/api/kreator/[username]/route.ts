@@ -2,17 +2,17 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
 
-// API untuk mengambil data kreator berdasarkan ID
+// API untuk mengambil data kreator berdasarkan username
 export async function GET(
   request: Request,
   context: { params: Promise<{ username: string }> }
 ) {
   try {
     const { username } = await context.params;
-    // Ambil data kreator berdasarkan ID dan konten yang dimilikinya
+
     const kreator = await prisma.kreator.findUnique({
       where: {
-        username: username, // mencari kreator berdasarkan username
+        username: username,
       },
       select: {
         id: true,
@@ -21,8 +21,8 @@ export async function GET(
         deskripsi: true,
         fotoProfil: true,
         fotoBanner: true,
+        email: true,
         konten: {
-          // ambil konten yang dimiliki kreator
           select: {
             id: true,
             konten: true,
@@ -32,28 +32,26 @@ export async function GET(
         },
         _count: {
           select: {
-            konten: true, // ambil jumlah konten yang dimiliki kreator
+            konten: true,
           },
         },
       },
     });
 
-    // Hitung jumlah kodeSubscription pada model Subscription
     const totalKodeSubscription = await prisma.subscription.aggregate({
       where: {
-        kreatorId: kreator?.id, // hanya hitung subscription untuk kreator ini
+        kreatorId: kreator?.id,
       },
       _count: {
-        kodeSubscription: true, // hitung jumlah kodeSubscription
+        kodeSubscription: true,
       },
     });
 
-    // Jika kreator ditemukan, return data kreator dan jumlah kodeSubscription
     if (kreator) {
       return NextResponse.json({
         ...kreator,
         totalKodeSubscription:
-          totalKodeSubscription._count.kodeSubscription || 0, // tambahkan total kodeSubscription
+          totalKodeSubscription._count.kodeSubscription || 0,
       });
     } else {
       return NextResponse.json(
@@ -63,6 +61,38 @@ export async function GET(
     }
   } catch (error) {
     console.error("Error fetching data:", error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: Request,
+  context: { params: Promise<{ username: string }> }
+) {
+  try {
+    const { username } = await context.params;
+    const body = await request.json();
+
+    const { nama, deskripsi, fotoProfil, fotoBanner } = body;
+
+    const updatedKreator = await prisma.kreator.update({
+      where: {
+        username: username,
+      },
+      data: {
+        nama,
+        deskripsi,
+        fotoProfil,
+        fotoBanner,
+      },
+    });
+
+    return NextResponse.json(updatedKreator);
+  } catch (error) {
+    console.error("Error updating data:", error);
     return NextResponse.json(
       { message: "Terjadi kesalahan pada server" },
       { status: 500 }

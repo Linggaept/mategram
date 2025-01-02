@@ -1,12 +1,12 @@
-"use client"
+"use client";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import SidebarWithHeader from "./sidebar";
 
-export const Pengaturan = () => {
-    return <main>
-        <SidebarWithHeader />
-        {/* <h1>test</h1> */}
+export default function Pengaturan() {
+  return (
+    <main>
+      <SidebarWithHeader />
     </main>
+  );
 };
 
-export default Pengaturan
