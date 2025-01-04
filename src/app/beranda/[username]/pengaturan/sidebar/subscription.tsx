@@ -8,6 +8,9 @@ import { useParams } from "next/navigation";
 export default function Subscription() {
   const [biaya, setBiaya] = useState("");
   const [kreator, setKreator] = useState<any>(null);
+  const [namaRekening, setNamaRekening] = useState<string>("");
+  const [nomorRekening, setNomorRekening] = useState<string>("");
+
   const { username } = useParams();
 
   // Mengambil data kreator dari API
@@ -19,7 +22,9 @@ export default function Subscription() {
       if (!response.ok) throw new Error("Gagal memuat data kreator");
       const data = await response.json();
       setKreator({
-        biaya: data.biayaSubscription, // Mengambil biaya subscription dari data kreator
+        namaRekening: data.rekening?.namaRekening || "",
+        nomorRekening: data.rekening?.nomorRekening || "",
+        biaya: data.biayaSubscription,
       });
     } catch (err: any) {
       alert(err.message || "Terjadi kesalahan saat memuat data kreator.");
@@ -33,12 +38,12 @@ export default function Subscription() {
   // Fungsi untuk memperbarui biaya subscription
   const updateSubscriptionCost = async (biayaSubscription: string) => {
     try {
-      const response = await fetch(`/api/kreator/${username}`, {
+      const response = await fetch(`/api/changeBiaya/${username}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ biaya: biayaSubscription }),
+        body: JSON.stringify({ biayaSubscription: biayaSubscription }),
       });
       const data = await response.json();
 
@@ -46,10 +51,35 @@ export default function Subscription() {
         alert(data.message || "Biaya subscription berhasil diupdate.");
       }
       if (!response.ok) {
-        alert(data.error || "Terjadi kesalahan saat mengupdate biaya subscription.");
+        alert(
+          data.error || "Terjadi kesalahan saat mengupdate biaya subscription."
+        );
       }
     } catch (err: any) {
-      alert(err.message || "Terjadi kesalahan saat mengupdate biaya subscription.");
+      alert(
+        err.message || "Terjadi kesalahan saat mengupdate biaya subscription."
+      );
+    }
+  };
+
+  const updateRekening = async () => {
+    try {
+      const response = await fetch(`/api/changeRekening/${username}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ namaRekening, nomorRekening }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || "Rekening berhasil diupdate.");
+      } else {
+        alert(data.error || "Terjadi kesalahan saat mengupdate rekening.");
+      }
+    } catch (err: any) {
+      alert(err.message || "Terjadi kesalahan saat mengupdate rekening.");
     }
   };
 
@@ -75,7 +105,7 @@ export default function Subscription() {
             }
           }}
         >
-          <div className="flex items-center px-6 py-2 mt-4">
+          <div className="block md:flex items-center px-6 py-2 mt-4">
             <label
               htmlFor="biaya"
               className="text-black font-normal text-lg w-2/12"
@@ -86,13 +116,13 @@ export default function Subscription() {
               type="text"
               name="biaya"
               id="biaya"
-              value={biaya} // Menggunakan value agar terkontrol
               defaultValue={kreator.biaya}
+              onChange={(e) => setBiaya(e.target.value)}
               className="rounded-full w-full py-2 px-4 border border-gray-400 bg-white text-black"
             />
           </div>
 
-          <div className="w-3/12 items-end flex justify-end py-4 mb-2">
+          <div className="w-11/12 md:w-3/12 items-end flex justify-end py-4 mb-2">
             <button
               type="submit"
               className="py-2 px-8 rounded-3xl bg-blue-600 text-white font-semibold text-lg"
@@ -109,8 +139,14 @@ export default function Subscription() {
           Rekening
         </h1>
 
-        <div className="flex flex-col w-full mt-4">
-          <div className="flex px-6 py-2 items-center">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateRekening();
+          }}
+          className="flex flex-col w-full mt-4"
+        >
+          <div className="block md:flex px-6 py-2 items-center">
             <label
               htmlFor="namaRekening"
               className="text-black font-normal text-lg w-2/12"
@@ -121,25 +157,28 @@ export default function Subscription() {
               type="text"
               name="namaRekening"
               id="namaRekening"
+              defaultValue={kreator.namaRekening}
+              onChange={(e) => setNamaRekening(e.target.value)}
               className="rounded-full w-full py-2 px-4 border border-gray-400 bg-white text-black"
             />
           </div>
-          <div className="flex px-6 py-2 items-center">
+          <div className="block md:flex px-6 py-2 items-center">
             <label
-              htmlFor="noRekening"
+              htmlFor="nomorRekening"
               className="text-black font-normal text-lg w-2/12"
             >
               No. Rekening
             </label>
             <input
               type="text"
-              name="noRekening"
-              id="noRekening"
+              name="nomorRekening"
+              id="nomorRekening"
+              defaultValue={kreator.nomorRekening}
+              onChange={(e) => setNomorRekening(e.target.value)}
               className="rounded-full w-full py-2 px-4 border border-gray-400 bg-white text-black"
             />
           </div>
-
-          <div className="w-3/12 items-end flex justify-end py-4 mb-2">
+          <div className="w-11/12 md:w-3/12 items-end flex justify-end py-4 mb-2">
             <button
               type="submit"
               className="py-2 px-8 rounded-3xl bg-blue-600 text-white font-semibold text-lg"
@@ -147,7 +186,7 @@ export default function Subscription() {
               Simpan
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

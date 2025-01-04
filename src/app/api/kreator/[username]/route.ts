@@ -22,6 +22,7 @@ export async function GET(
         fotoProfil: true,
         fotoBanner: true,
         email: true,
+        biayaSubscription: true,
         konten: {
           select: {
             id: true,
@@ -30,6 +31,7 @@ export async function GET(
             type: true,
           },
         },
+        rekening: true,
         _count: {
           select: {
             konten: true,

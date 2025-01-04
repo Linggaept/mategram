@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 
 export async function PUT(
   req: Request,
-  { params }: { params: { username: string } }
+  context: { params: Promise< { username: string }> }
 ) {
-  const { username } = params;
+  const { username } = await context.params;
 
   try {
     const body = await req.json();
