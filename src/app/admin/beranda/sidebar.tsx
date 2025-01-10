@@ -9,18 +9,16 @@ import { IoWalletOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { BsPlayBtn } from "react-icons/bs";
 import Profil from "./sidebar/profil";
-import Akademi from "./sidebar/akademi";
-import Subscription from "./sidebar/subscription";
-import Penghasilan from "./sidebar/penghasilan";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import Kreator from "./sidebar/kreator";
+import Konten from "./sidebar/konten";
+import Subscriber from "./sidebar/subscriber";
+import Transaksi from "./sidebar/transaksi";
+import Pembayaran from "./sidebar/pembayaran";
 
-export const SidebarWithHeader = () => {
+export const SidebarAdmin = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [activeTab, setActiveTab] = useState("Profil");
-
-  const { username } = useParams();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -50,12 +48,16 @@ export const SidebarWithHeader = () => {
     switch (activeTab) {
       case "Profil":
         return <Profil />;
-      case "Akademi":
-        return <Akademi />;
-      case "Subscription":
-        return <Subscription />;
-      case "Penghasilan":
-        return <Penghasilan />;
+      case "Kreator":
+        return <Kreator />;
+      case "Konten":
+        return <Konten />;
+      case "Subscriber":
+        return <Subscriber />;
+      case "Transaksi":
+        return <Transaksi />;
+      case "Pembayaran":
+        return <Pembayaran />;
       default:
         return (
           <div className="p-4 text-black">Pilih tab untuk melihat konten.</div>
@@ -77,11 +79,9 @@ export const SidebarWithHeader = () => {
             </button>
           )
         ) : (
-          <Link href={`/beranda/${username}`}>
-            <button className="text-blue-600 font-semibold text-lg">
-              Kembali
-            </button>
-          </Link>
+          <button className="text-blue-600 font-semibold text-lg">
+            Kembali
+          </button>
         )}
 
         <div className="w-full flex justify-end">
@@ -117,42 +117,68 @@ export const SidebarWithHeader = () => {
               </li>
               <li
                 className={`p-2 cursor-pointer flex items-center text-lg font-semibold gap-2 ${
-                  activeTab === "Akademi"
+                  activeTab === "Kreator"
                     ? "bg-white text-blue-600"
                     : "hover:bg-blue-600 hover:text-white text-gray-400"
                 }`}
-                onClick={() => setActiveTab("Akademi")}
+                onClick={() => setActiveTab("Kreator")}
               >
                 <span className="ml-4">
                   <BsPlayBtn className="text-2xl font-semibold" />
                 </span>
-                Akademi
+                Kreator
               </li>
               <li
                 className={`p-2 cursor-pointer flex items-center text-lg font-semibold gap-2 ${
-                  activeTab === "Subscription"
+                  activeTab === "Konten"
                     ? "bg-white text-blue-600"
                     : "hover:bg-blue-600 hover:text-white text-gray-400"
                 }`}
-                onClick={() => setActiveTab("Subscription")}
+                onClick={() => setActiveTab("Konten")}
               >
                 <span className="ml-4">
                   <FaRegListAlt className="text-2xl font-semibold" />
                 </span>
-                Subscription
+                Konten
               </li>
               <li
                 className={`p-2 cursor-pointer flex items-center text-lg font-semibold gap-2 ${
-                  activeTab === "Penghasilan"
+                  activeTab === "Subscriber"
                     ? "bg-white text-blue-600"
                     : "hover:bg-blue-600 hover:text-white text-gray-400"
                 }`}
-                onClick={() => setActiveTab("Penghasilan")}
+                onClick={() => setActiveTab("Subscriber")}
               >
                 <span className="ml-4">
                   <IoWalletOutline className="text-2xl font-semibold" />
                 </span>
-                Penghasilan
+                Subscriber
+              </li>
+              <li
+                className={`p-2 cursor-pointer flex items-center text-lg font-semibold gap-2 ${
+                  activeTab === "Transaksi"
+                    ? "bg-white text-blue-600"
+                    : "hover:bg-blue-600 hover:text-white text-gray-400"
+                }`}
+                onClick={() => setActiveTab("Transaksi")}
+              >
+                <span className="ml-4">
+                  <IoWalletOutline className="text-2xl font-semibold" />
+                </span>
+                Transaksi
+              </li>
+              <li
+                className={`p-2 cursor-pointer flex items-center text-lg font-semibold gap-2 ${
+                  activeTab === "Pembayaran"
+                    ? "bg-white text-blue-600"
+                    : "hover:bg-blue-600 hover:text-white text-gray-400"
+                }`}
+                onClick={() => setActiveTab("Pembayaran")}
+              >
+                <span className="ml-4">
+                  <IoWalletOutline className="text-2xl font-semibold" />
+                </span>
+                Pembayaran
               </li>
               <li
                 className="p-2 text-red-600 hover:bg-red-600 hover:text-white cursor-pointer flex items-center text-lg font-semibold gap-2"
@@ -176,4 +202,4 @@ export const SidebarWithHeader = () => {
   );
 };
 
-export default SidebarWithHeader;
+export default SidebarAdmin;

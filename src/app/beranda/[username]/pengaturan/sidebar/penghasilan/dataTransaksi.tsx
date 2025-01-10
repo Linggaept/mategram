@@ -1,86 +1,9 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-type Transaction = {
-  no: number;
-  id: string;
-  waktu: string;
-  total: string;
-  status: "Sudah dibayar" | "Belum dibayar" | "Tidak dibayar";
-};
-
-const transactions: Transaction[] = [
-  {
-    no: 1,
-    id: "#2406190089",
-    waktu: "19 November 2024, 18:30",
-    total: "Rp50.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 2,
-    id: "#2406190089",
-    waktu: "19 November 2024, 10:30",
-    total: "Rp50.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 3,
-    id: "#2406190089",
-    waktu: "19 November 2024, 06:07",
-    total: "Rp50.000",
-    status: "Belum dibayar",
-  },
-  {
-    no: 4,
-    id: "#2406190089",
-    waktu: "12 November 2024, 18:30",
-    total: "Rp50.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 5,
-    id: "#2406190089",
-    waktu: "08 November 2024, 18:30",
-    total: "Rp50.000",
-    status: "Tidak dibayar",
-  },
-  {
-    no: 6,
-    id: "#2406190089",
-    waktu: "08 November 2024, 18:30",
-    total: "Rp50.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 7,
-    id: "#2406190089",
-    waktu: "19 Oktober 2024, 18:30",
-    total: "Rp30.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 8,
-    id: "#2406190089",
-    waktu: "19 Oktober 2024, 18:30",
-    total: "Rp30.000",
-    status: "Belum dibayar",
-  },
-  {
-    no: 9,
-    id: "#2406190089",
-    waktu: "08 Oktober 2024, 18:30",
-    total: "Rp30.000",
-    status: "Sudah dibayar",
-  },
-  {
-    no: 10,
-    id: "#2406190089",
-    waktu: "07 Oktober 2024, 18:30",
-    total: "Rp30.000",
-    status: "Sudah dibayar",
-  },
-];
-
+// Status style function (unchanged)
 const getStatusStyle = (status: string) => {
   switch (status) {
     case "Sudah dibayar":
@@ -95,12 +18,32 @@ const getStatusStyle = (status: string) => {
 };
 
 const DataTransaksi: React.FC = () => {
+  const { username } = useParams();
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get(`/api/dataTransaksi/${username}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setTransactions(response.data); // Set data to state
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, [username]);
+
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full bg-white">
       <h1 className="text-black text-2xl font-bold mb-4">Data Transaksi</h1>
       <div className="bg-white rounded-2xl shadow p-4 flex items-center w-full">
         <div className="overflow-x-auto w-full">
-          <table className="min-w-full table-auto ">
+          <table className="min-w-full table-auto">
             <thead>
               <tr className="bg-gray-200">
                 <th className="px-4 py-2 border border-gray-200 text-left text-black font-bold">
@@ -121,27 +64,27 @@ const DataTransaksi: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.no} className="hover:bg-gray-50">
+              {transactions.map((transaction, index) => (
+                <tr key={transaction.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b border-gray-200 text-black">
-                    {transaction.no}
+                    {index + 1}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200 text-black">
                     {transaction.id}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200 text-black">
-                    {transaction.waktu}
+                    {new Date(transaction.tanggal).toLocaleString()}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200 text-black">
-                    {transaction.total}
+                    Rp{transaction.totalTransaksi.toLocaleString()}
                   </td>
                   <td className="px-4 py-2 border-b border-gray-200 text-black">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusStyle(
-                        transaction.status
+                        transaction.statusTransaksi
                       )}`}
                     >
-                      {transaction.status}
+                      {transaction.statusTransaksi}
                     </span>
                   </td>
                 </tr>

@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 
 export async function POST(
   req: NextRequest,
-  context: { params: { username: string } }
+  context: { params: Promise<{ username: string }> }
 ) {
-  const { username } = context.params;
+  const { username } = await context.params;
   console.log("Username:", username); // Debugging
 
   try {
