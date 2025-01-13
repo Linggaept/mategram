@@ -8,36 +8,36 @@ export async function DELETE(req: Request) {
 
     if (!id) {
       return NextResponse.json(
-        { message: "Kreator ID is required" },
+        { message: "Subscriber ID is required" },
         { status: 400 }
       );
     }
 
     // Mengecek apakah kreator yang akan dihapus memiliki transaksi atau subscription aktif
-    const kreator = await prisma.kreator.findUnique({
+    const subscriber = await prisma.subscriber.findUnique({
       where: { id },
     });
 
-    if (!kreator) {
+    if (!subscriber) {
       return NextResponse.json(
-        { message: "Kreator tidak ditemukan" },
+        { message: "Subscriber tidak ditemukan" },
         { status: 404 }
       );
     }
 
     // Hapus kreator berdasarkan ID jika tidak ada transaksi atau subscription terkait
-    await prisma.kreator.delete({
+    await prisma.subscriber.delete({
       where: { id },
     });
 
     return NextResponse.json(
-      { message: "Kreator berhasil dihapus" },
+      { message: "subscriber berhasil dihapus" },
       { status: 200 }
     );
   } catch (error: any) {
-    // Tangani error jika kreator tidak ditemukan atau masalah lain
+    // Tangani error jika subscriber tidak ditemukan atau masalah lain
     return NextResponse.json(
-      { message: "Gagal menghapus kreator", error: error.message },
+      { message: "Gagal menghapus subscriber", error: error.message },
       { status: 500 }
     );
   }

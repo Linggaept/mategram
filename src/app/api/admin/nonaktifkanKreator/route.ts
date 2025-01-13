@@ -13,30 +13,24 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    if (statusAkun === false) {
-      await prisma.kreator.update({
-        where: { id },
-        data: { statusAkun: true },
-      });
+    // Update status akun berdasarkan nilai yang diterima
+    await prisma.kreator.update({
+      where: { id },
+      data: { statusAkun },
+    });
 
-      return NextResponse.json(
-        { message: "Kreator berhasil dinonaktifkan" },
-        { status: 200 }
-      );
-    } else if (statusAkun === true) {
-      await prisma.kreator.update({
-        where: { id },
-        data: { statusAkun: false },
-      });
-
-      return NextResponse.json(
-        { message: "Kreator berhasil diaktifkan" },
-        { status: 200 }
-      );
-    }
-  } catch (error) {
     return NextResponse.json(
-      { message: "Gagal menonaktifkan kreator", error },
+      {
+        message: statusAkun
+          ? "Kreator berhasil dinonaktifkan"
+          : "Kreator berhasil diaktifkan",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Gagal mengubah status kreator", error },
       { status: 500 }
     );
   }

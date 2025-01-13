@@ -4,6 +4,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Loading from "@/components/loading";
 
 export default function Subscription() {
   const [biaya, setBiaya] = useState("");
@@ -85,7 +86,7 @@ export default function Subscription() {
 
   // Menunggu data kreator untuk di-fetch sebelum merender komponen
   if (!kreator) {
-    return <div>Loading...</div>; // Menampilkan loading state sampai data kreator tersedia
+    return <div><Loading /></div>; // Menampilkan loading state sampai data kreator tersedia
   }
 
   return (

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import Loading from "@/components/loading";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -51,7 +52,11 @@ export default function InputToken() {
   };
 
   if (!kreator) {
-    return <p>Loading...</p>;
+    return (
+      <p>
+        <Loading />
+      </p>
+    );
   }
 
   if (error) {

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 
 import React, { useEffect, useState } from "react";
 import { SubscribeModalButton } from "../subscribeModalButton";
+import Loading from "@/components/loading";
 
 const SubscriptionPage = () => {
   const { username } = useParams(); // Ambil username dari URL
@@ -34,7 +35,7 @@ const SubscriptionPage = () => {
   }, [username]);
 
   if (!kreator) {
-    return <p>Loading...</p>;
+    return <p><Loading /></p>;
   }
 
   return (

@@ -14,6 +14,7 @@ import {
 import { Text, Button } from "@chakra-ui/react";
 import Image from "next/image";
 import EditModal from "./editModal";
+import Loading from "@/components/loading";
 
 // OverlayOne component
 const OverlayOne = () => (
@@ -73,7 +74,7 @@ export const ViewImage = ({ isOpen, onClose, contentId }: ModalImageProps) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Loading /></div>;
   }
 
   if (!content) {

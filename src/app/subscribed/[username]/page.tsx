@@ -7,6 +7,7 @@ import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import ModalKonten from "../modalKonten";
+import Loading from "@/components/loading";
 
 export default function SubscribedPage() {
   const [kreator, setKreator] = useState<any>(null);
@@ -61,7 +62,7 @@ export default function SubscribedPage() {
   }, [username]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Loading /></div>;
   }
 
   if (!kreator) {

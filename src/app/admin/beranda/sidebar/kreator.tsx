@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
@@ -56,6 +57,7 @@ export default function Kreator() {
   };
 
   const handleDelete = async (id: string) => {
+    setIsLoading(true); // Set loading state true saat proses penghapusan
     try {
       const response = await fetch("/api/admin/deleteKreator", {
         method: "DELETE",
@@ -63,16 +65,19 @@ export default function Kreator() {
         body: JSON.stringify({ id }), // Kirim ID kreator yang akan dihapus
       });
 
+      const data = await response.json(); // Mengambil respons dalam format JSON
+
       if (response.ok) {
-        alert("Kreator berhasil dihapus");
-        setKreator(kreator.filter((item: any) => item.id !== id));
+        alert(data.message); // Tampilkan pesan sukses jika berhasil
+        setKreator(kreator.filter((item: any) => item.id !== id)); // Hapus kreator dari daftar
       } else {
-        const { message } = await response.json();
-        alert(message);
+        alert(data.message || "Gagal menghapus kreator"); // Tampilkan pesan error jika gagal
       }
     } catch (error) {
       console.error(error);
       alert("Gagal menghapus kreator");
+    } finally {
+      setIsLoading(false); // Set loading state false setelah selesai
     }
   };
 
@@ -80,7 +85,6 @@ export default function Kreator() {
     <div className="p-4 text-black">
       <h1 className="text-black text-2xl font-bold mb-4">Data Kreator</h1>
       <div className="p-4 w-full bg-white">
-        <h1 className="text-black text-2xl font-bold mb-4">Data Transaksi</h1>
         <div className="bg-white rounded-2xl shadow p-4 flex items-center w-full">
           <div className="overflow-x-auto w-full">
             <table className="min-w-full table-auto">
@@ -105,7 +109,7 @@ export default function Kreator() {
               </thead>
               <tbody>
                 {kreator.map((item: any, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-4 py-2 border-b border-gray-200 text-black">
                       {index + 1}
                     </td>
@@ -117,12 +121,12 @@ export default function Kreator() {
                     </td>
                     <td className="px-4 py-2 border-b border-gray-200 text-black">
                       {item.statusAkun ? (
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-lg">
-                          Nonaktif
-                        </span>
-                      ) : (
                         <span className="bg-green-100 text-green-800 px-3 py-1 rounded-lg">
                           Aktif
+                        </span>
+                      ) : (
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-lg">
+                          Nonaktif
                         </span>
                       )}
                     </td>
@@ -137,10 +141,10 @@ export default function Kreator() {
                             className={`px-3 py-1 rounded-lg text-sm font-medium ${
                               isLoading
                                 ? "bg-gray-300 text-gray-600"
-                                : "bg-white text-green-600 border-2 border-green-600"
+                                : "bg-white text-red-600 border-2 border-red-600"
                             }`}
                           >
-                            {isLoading ? "Loading..." : "Aktifkan"}
+                            {isLoading ? "Loading..." : "Nonaktifkan"}
                           </button>
                         ) : (
                           <button
@@ -151,19 +155,24 @@ export default function Kreator() {
                             className={`px-3 py-1 rounded-lg text-sm font-medium ${
                               isLoading
                                 ? "bg-gray-300 text-gray-600"
-                                : "bg-white text-red-600 border-2 border-red-600"
+                                : "bg-white text-green-600 border-2 border-green-600"
                             }`}
                           >
-                            {isLoading ? "Loading..." : "Nonaktifkan"}
+                            {isLoading ? "Loading..." : "Aktifkan"}
                           </button>
                         )}
 
                         <button
                           onClick={() => handleDelete(item.id)}
-                          className="flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium bg-white text-red-600 border border-red-600"
+                          disabled={isLoading}
+                          className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium ${
+                            isLoading
+                              ? "bg-gray-300 text-gray-600"
+                              : "bg-white text-red-600 border border-red-600"
+                          }`}
                         >
                           <FaTrashAlt />
-                          Delete
+                          {isLoading ? "Loading..." : "Hapus"}
                         </button>
                       </div>
                     </td>

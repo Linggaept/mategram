@@ -26,7 +26,7 @@ model Kreator {
   fotoProfil        String?
   fotoBanner        String?
   deskripsi         String?
-  statusAkun        Boolean             @default(false)
+  statusAkun        Boolean             @default(true)
   biayaSubscription Float
   konten            Konten[]
   pembayaranKreator PembayaranKreator[]
