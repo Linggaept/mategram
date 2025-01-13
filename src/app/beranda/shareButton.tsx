@@ -7,7 +7,7 @@ interface ShareButtonProps {
 const ShareButton = ({ username }: ShareButtonProps) => {
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.clipboard) {
-      const profileLink = `https://mategram.online/subscription/${username}`;
+      const profileLink = `https://www.mategram.online/subscription/${username}`;
       navigator.clipboard
         .writeText(profileLink)
         .then(() => {
