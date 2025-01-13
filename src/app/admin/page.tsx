@@ -4,7 +4,8 @@
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
 export default function Admin() {
   const [email, setEmail] = useState<string>("");
@@ -12,6 +13,7 @@ export default function Admin() {
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
+  const { username } = useParams();
   const router = useRouter(); // Router dari next/navigation
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,8 @@ export default function Admin() {
       setMessage(response.data.message);
 
       // Redirect ke halaman beranda dengan ID
-      router.push(`admin/beranda/`); // Gunakan router.push untuk redirect
+      const username = response.data.username; // ID pengguna dari respons API
+      router.push(`/admin/beranda/${username}`); // Gunakan router.push untuk redirect
     } catch (err: any) {
       setError(err.response?.data?.message || "Terjadi kesalahan");
     }
@@ -37,7 +40,9 @@ export default function Admin() {
       <main className="flex flex-col mx-auto">
         <div className="flex items-center mx-auto py-10">
           <Image src="/Logo.png" alt="Logo" width={30} height={30} />
-          <h1 className="font-semibold text-center text-2xl ml-2">Mategram Admin</h1>
+          <h1 className="font-semibold text-center text-2xl ml-2">
+            Mategram Admin
+          </h1>
         </div>
 
         <div className="flex flex-col mx-auto xl:p-10 p-6 border border-gray-300 rounded-xl md:w-4/12 w-3/4">

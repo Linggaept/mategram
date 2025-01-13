@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     // Cari user berdasarkan email
     const user = await prisma.kreator.findUnique({
-      where: {  email },
+      where: { email },
     });
 
     if (!user) {
@@ -27,14 +27,17 @@ export async function POST(req: Request) {
       );
     }
 
+    if (user.statusAkun === false) {
+      return NextResponse.json(
+        { message: "Akun Anda sedang dinonaktifkan" },
+        { status: 401 }
+      );
+    }
     // Bandingkan password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return NextResponse.json(
-        { message: "Password salah" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Password salah" }, { status: 401 });
     }
 
     // Buat JWT token

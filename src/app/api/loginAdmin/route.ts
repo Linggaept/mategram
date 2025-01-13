@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Cari user berdasarkan email
+    // Cari admin berdasarkan email
     const user = await prisma.admin.findUnique({
       where: { email },
     });
@@ -23,6 +23,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { message: "Email tidak ditemukan" },
         { status: 404 }
+      );
+    }
+
+    // Validasi password langsung
+    if (user.password !== password) {
+      return NextResponse.json(
+        { message: "Password salah" },
+        { status: 401 }
       );
     }
 

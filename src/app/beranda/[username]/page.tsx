@@ -9,6 +9,7 @@ import Image from "next/image";
 import ViewImage from "../modalImage";
 import UploadModal from "../uploadModal";
 import ShareButton from "../shareButton";
+import Loading from "@/components/loading";
 
 export default function Beranda() {
   const [kreator, setKreator] = useState<any>(null);
@@ -73,7 +74,7 @@ export default function Beranda() {
   }, [token, username]); // Update jika token atau id berubah
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Loading /></div>;
   }
 
   if (!kreator) {
