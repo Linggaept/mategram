@@ -1,28 +1,39 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../../lib/prisma";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextResponse } from "next/server";
+import prisma from "../../../../../lib/prisma"; // Sesuaikan path dengan struktur proyek Anda
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "DELETE") {
-    const { id } = req.body;
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json(); // Ambil `id` dari body request
 
     if (!id) {
-      return res.status(400).json({ message: "Kreator ID is required" });
+      return NextResponse.json(
+        { message: "Kreator ID is required" },
+        { status: 400 }
+      );
     }
 
-    try {
-      await prisma.kreator.delete({
-        where: { id },
-      });
+    // Hapus kreator berdasarkan ID
+    await prisma.kreator.delete({
+      where: { id },
+    });
 
-      res.status(200).json({ message: "Kreator berhasil dihapus" });
-    } catch (error) {
-      res.status(500).json({ message: "Gagal menghapus kreator", error });
+    return NextResponse.json(
+      { message: "Kreator berhasil dihapus" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    // Tangani error jika kreator tidak ditemukan atau masalah lain
+    if (error.code === "P2025") {
+      return NextResponse.json(
+        { message: "Kreator tidak ditemukan" },
+        { status: 404 }
+      );
     }
-  } else {
-    res.setHeader("Allow", ["DELETE"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+
+    return NextResponse.json(
+      { message: "Gagal menghapus kreator", error: error.message },
+      { status: 500 }
+    );
   }
 }

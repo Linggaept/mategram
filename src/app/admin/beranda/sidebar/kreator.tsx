@@ -60,14 +60,18 @@ export default function Kreator() {
       const response = await fetch("/api/admin/deleteKreator", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id }), // Kirim ID kreator yang akan dihapus
       });
+
       if (response.ok) {
         alert("Kreator berhasil dihapus");
         setKreator(kreator.filter((item: any) => item.id !== id));
+      } else {
+        const { message } = await response.json();
+        alert(message);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Gagal menghapus kreator");
     }
   };
