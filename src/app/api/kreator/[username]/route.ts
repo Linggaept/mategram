@@ -92,7 +92,7 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updatedKreator);
+    return NextResponse.json(updatedKreator, { status: 200 });
   } catch (error) {
     console.error("Error updating data:", error);
     return NextResponse.json(

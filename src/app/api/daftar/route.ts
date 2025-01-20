@@ -9,19 +9,23 @@ export async function POST(req: Request) {
 
     // Validasi input
     if (!nama || !username || !email || !password) {
-      return NextResponse.json({ message: "Semua field wajib diisi!" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Semua field wajib diisi!" },
+        { status: 400 }
+      );
     }
 
-    // Periksa apakah email atau username sudah terdaftar
     const existingUser = await prisma.kreator.findUnique({
       where: { email },
     });
 
     if (existingUser) {
-      return NextResponse.json({ message: "Email sudah digunakan!" }, { status: 409 });
+      return NextResponse.json(
+        { message: "Email sudah digunakan!" },
+        { status: 409 }
+      );
     }
 
-    // Enkripsi password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Buat kreator baru
@@ -32,15 +36,21 @@ export async function POST(req: Request) {
         email,
         fotoBanner: "default.jpg",
         fotoProfil: "default.png",
-        password: hashedPassword, // Simpan password yang sudah terenkripsi
-        statusAkun: false, // Status akun defaultnya belum aktif
-        biayaSubscription: 0, // Berikan nilai default untuk biayaSubscription
+        password: hashedPassword,
+        statusAkun: true, 
+        biayaSubscription: 0, 
       },
     });
 
-    return NextResponse.json({ message: "Pendaftaran kreator berhasil!", kreator }, { status: 201 });
+    return NextResponse.json(
+      { message: "Pendaftaran kreator berhasil!", kreator },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error during creator registration:", error);
-    return NextResponse.json({ message: "Terjadi kesalahan server!" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Terjadi kesalahan server!" },
+      { status: 500 }
+    );
   }
 }

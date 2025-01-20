@@ -30,7 +30,7 @@ export default function ProfilPart() {
         setProfil({
           nama: data.nama,
           username: data.username,
-          email: data.email, // Email mungkin tidak dikembalikan oleh API
+          email: data.email, 
           fotoProfil: data.fotoProfil || "",
           fotoBanner: data.fotoBanner || "",
           deskripsi: data.deskripsi || "",
@@ -45,7 +45,6 @@ export default function ProfilPart() {
     fetchProfil();
   }, [ username ]);
 
-  // Simpan data ke server
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -57,8 +56,8 @@ export default function ProfilPart() {
       const updatedData = {
         nama: formData.get("nama"),
         deskripsi: formData.get("deskripsi"),
-        fotoProfil: profil.fotoProfil, // Simpan file upload logic jika diperlukan
-        fotoBanner: profil.fotoBanner, // Simpan file upload logic jika diperlukan
+        fotoProfil: profil.fotoProfil,
+        fotoBanner: profil.fotoBanner,
       };
 
       const response = await fetch(`/api/kreator/${username}`, {

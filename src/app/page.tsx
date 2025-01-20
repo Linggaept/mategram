@@ -12,7 +12,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter(); // Router dari next/navigation
+  const router = useRouter(); 
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +23,11 @@ export default function Login() {
     try {
       const response = await axios.post("/api/login", { email, password });
 
-      // Simpan token di localStorage
       localStorage.setItem("token", response.data.token);
       setMessage(response.data.message);
 
-      // Redirect ke halaman beranda dengan ID
-      const username = response.data.username; // ID pengguna dari respons API
-      router.push(`/beranda/${username}`); // Gunakan router.push untuk redirect
+      const username = response.data.username; 
+      router.push(`/beranda/${username}`); 
     } catch (err: any) {
       setError(err.response?.data?.message || "Terjadi kesalahan");
     }

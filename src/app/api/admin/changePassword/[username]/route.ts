@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -32,33 +31,41 @@ export async function POST(
       );
     }
 
-    const kreator = await prisma.kreator.findUnique({
+    const admin = await prisma.admin.findUnique({
       where: { username },
     });
 
-    if (!kreator) {
+    if (!admin) {
       return NextResponse.json(
-        { error: "Kreator tidak ditemukan" },
+        { error: "admin tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      passwordLama,
-      kreator.password
-    );
-    if (!isPasswordValid) {
+    if (admin.password !== passwordLama) {
       return NextResponse.json(
         { error: "Password lama salah" },
         { status: 401 }
       );
     }
 
-    const hashedPassword = await bcrypt.hash(passwordBaru, 10);
+    if (passwordBaru !== passwordBaru) {
+      return NextResponse.json(
+        { error: "Password baru dan konfirmasi password tidak sama" },
+        { status: 400 }
+      );
+    }
 
-    await prisma.kreator.update({
+    if (passwordBaru === passwordLama) {
+      return NextResponse.json(
+        { error: "Password baru tidak boleh sama dengan password lama" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.admin.update({
       where: { username },
-      data: { password: hashedPassword },
+      data: { password: passwordBaru },
     });
 
     return NextResponse.json(

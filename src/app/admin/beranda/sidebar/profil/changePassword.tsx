@@ -18,7 +18,7 @@ export default function ChangePassword() {
     }
 
     try {
-      const response = await fetch(`/api/changePassword/${username}`, {
+      const response = await fetch(`/api/admin/changePassword/${username}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

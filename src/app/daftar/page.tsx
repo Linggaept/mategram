@@ -72,7 +72,7 @@ export default function Daftar() {
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
                   className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  required
+                  
                 />
               </div>
               <div className="flex flex-col">
@@ -86,7 +86,7 @@ export default function Daftar() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  required
+                  
                 />
               </div>
               <div className="flex flex-col">
@@ -100,7 +100,7 @@ export default function Daftar() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  required
+                  
                 />
               </div>
               <div className="flex flex-col">
@@ -114,7 +114,7 @@ export default function Daftar() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="border border-gray-300 rounded-3xl text-md px-3 py-2 text-sm mb-2 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                  required
+                  
                 />
               </div>
             </div>

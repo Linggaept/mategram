@@ -47,7 +47,6 @@ export const UploadModal = ({
         setIsVideo(false);
       }
 
-      // Generate preview URL
       const previewUrl = URL.createObjectURL(selectedFile);
       setPreview(previewUrl);
     }
@@ -59,11 +58,10 @@ export const UploadModal = ({
       return;
     }
 
-    // Create FormData with kreatorId
     const formData = new FormData();
     formData.append("file", file);
     formData.append("description", description);
-    formData.append("kreatorId", kreatorId); // Add kreatorId to formData
+    formData.append("kreatorId", kreatorId); 
 
     try {
       setIsLoading(true);
@@ -110,10 +108,8 @@ export const UploadModal = ({
             <h2 className="text-lg font-bold mb-5 text-black border-b-2 border-gray-600 w-full items-center text-center">
               Buat Postingan Baru
             </h2>
-            {/* Preview & File Input */}
             <div className="grid grid-cols-1 md:grid-cols-2 h-full gap-4 w-full">
               <div className="flex flex-col items-center w-full">
-                {/* Custom File Input */}
                 <div className="w-full aspect-square bg-gray-200 border border-gray-600 rounded-lg overflow-hidden">
                   <label
                     htmlFor="file-input"
