@@ -17,6 +17,12 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "mategram",
   description: "Social media for mates",
+  icons: {
+    icon: {
+      url: "/favicon.ico",
+      type: "image/x-icon",
+    }
+  }
 };
 
 export default function RootLayout({

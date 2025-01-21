@@ -77,7 +77,7 @@ export const SidebarWithHeader = () => {
             </button>
           )
         ) : (
-          <Link href={`/beranda/${username}`}>
+          <Link href={`/admin/beranda/${username}`}>
             <button className="text-blue-600 font-semibold text-lg">
               Kembali
             </button>

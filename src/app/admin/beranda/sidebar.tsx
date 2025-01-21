@@ -8,6 +8,8 @@ import { FaRegListAlt } from "react-icons/fa";
 import { IoWalletOutline } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { BsPlayBtn } from "react-icons/bs";
+import { MdPerson } from "react-icons/md";
+import { MdPayment } from "react-icons/md";
 import Profil from "./sidebar/profil";
 import Kreator from "./sidebar/kreator";
 import Konten from "./sidebar/konten";
@@ -78,11 +80,7 @@ export const SidebarAdmin = () => {
               <GiHamburgerMenu />
             </button>
           )
-        ) : (
-          <button className="text-blue-600 font-semibold text-lg">
-            Kembali
-          </button>
-        )}
+        ) : null}
 
         <div className="w-full flex justify-end">
           <Image
@@ -150,7 +148,7 @@ export const SidebarAdmin = () => {
                 onClick={() => setActiveTab("Subscriber")}
               >
                 <span className="ml-4">
-                  <IoWalletOutline className="text-2xl font-semibold" />
+                  <MdPerson className="text-2xl font-semibold" />
                 </span>
                 Subscriber
               </li>
@@ -176,7 +174,7 @@ export const SidebarAdmin = () => {
                 onClick={() => setActiveTab("Pembayaran")}
               >
                 <span className="ml-4">
-                  <IoWalletOutline className="text-2xl font-semibold" />
+                  <MdPayment className="text-2xl font-semibold" />
                 </span>
                 Pembayaran
               </li>

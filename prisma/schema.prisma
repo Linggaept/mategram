@@ -28,8 +28,8 @@ model Kreator {
   deskripsi         String?
   statusAkun        Boolean             @default(true)
   biayaSubscription Float
-  konten            Konten[]
-  pembayaranKreator PembayaranKreator[]
+  konten            Konten[]            
+  pembayaranKreator PembayaranKreator[] 
   subscription      Subscription[]
   transaksi         Transaksi[]
   rekening          Rekening?           @relation(fields: [rekeningId], references: [id])
@@ -56,7 +56,7 @@ model Konten {
   deskripsi String?
   kreatorId String
   type      String  @default("image")
-  kreator   Kreator @relation(fields: [kreatorId], references: [id])
+  kreator   Kreator @relation(fields: [kreatorId], references: [id], onDelete: Cascade)
 }
 
 model Transaksi {

@@ -57,6 +57,7 @@ export async function POST(req: Request) {
         statusTransaksi: "success", // Status transaksi awal
         kreatorId: kreatorId, // ID kreator yang terkait
         subscriberId: subscriber.id, // ID subscriber
+        paymentStatus: "belum dibayar", 
       },
     });
 
